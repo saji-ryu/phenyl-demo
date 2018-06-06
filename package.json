@@ -1,0 +1,26 @@
+{
+  "name": "phenyl-demo-mbaas",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/saji-ryu/phenyl-demo.git",
+  "author": "saji-ryu <rsajiki@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "modules/*"
+    ],
+    "nohoist": [
+      "herb-mbaas/**",
+      "herb-mobile-rx-ja/!(herb-*)",
+      "**/react-native",
+      "**/react-native/**",
+      "**/react-native-!(web)",
+      "**/react-native-!(web)/**",
+      "**/@cureapp/hanamaru-*",
+      "**/@cureapp/hanamaru-*/**",
+      "**/phenyl-http-client",
+      "**/phenyl-http-client/**"
+    ]
+  }
+}

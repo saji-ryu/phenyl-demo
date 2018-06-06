@@ -1,0 +1,46 @@
+{
+  "name": "mbaas",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Ryusei Sajiki",
+  "license": "MIT",
+  "scripts": {
+    "start": "node dest/index.js",
+    "start:dev": "NODE_ENV=development nodemon src/index.js --exec babel-node --watch src",
+    "build": "npm run build:clean && npm run build:babel",
+    "build:clean": "rm -rf dest && mkdir -p dest",
+    "build:babel": "babel src --out-dir dest --source-maps",
+    "deploy": "./scripts/deploy",
+    "lint": "../../node_modules/.bin/eslint . --cache",
+    "lint:fix": "../../node_modules/.bin/eslint . --fix --cache",
+    "test": "NODE_ENV=test API_HOST=http://localhost:12345 ../../node_modules/.bin/nyc --nycrc-path ../../.nycrc ../../node_modules/.bin/mocha --recursive test/",
+    "pretest": "NODE_ENV=development PORT=12345 MBAAS_ENDPOINT=http://127.0.0.1:12345 MOBILE_VERSION_RX_JA=$(node -e \"console.log(require('../herb-mobile-rx-ja/package.json').version)\") npm run start &",
+    "posttest": "../../scripts/kill-by-port 12345"
+  },
+  "dependencies": {
+    "cors": "~2.8.4",
+    "debug": "~3.1.0",
+    "dot": "~1.1.2",
+    "express": "~4.16.3",
+    "phenyl-express": "~0.2.5",
+    "phenyl-memory-db": "~0.2.5",
+    "phenyl-rest-api": "~0.3.5",
+    "phenyl-standards": "~0.2.5",
+    "phenyl-utils": "~0.2.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "~6.24.1",
+    "babel-plugin-transform-object-rest-spread": "~6.26.0",
+    "babel-plugin-transform-strip-jsnext": "^2.0.1",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "babel-register": "^6.26.0",
+    "chalk": "~2.4.1",
+    "phenyl-demo-interfaces": "*",
+    "mocha": "~5.0.2",
+    "node-fetch": "~2.1.2",
+    "nodemon": "~1.13.3",
+    "phenyl-interfaces": "~0.2.3"
+  }
+}
