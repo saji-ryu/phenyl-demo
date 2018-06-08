@@ -2,34 +2,18 @@
 import express from 'express'
 import cors from 'cors'
 import _debug from 'debug'
-// import Raven from 'raven'
 import PhenylRestApi from 'phenyl-rest-api'
 import type { EntityClient } from 'phenyl-interfaces'
 import { createEntityClient as createMemoryClient } from 'phenyl-memory-db'
-//import { createEntityClient as createMongoDBClient, connect } from 'phenyl-mongodb'
 import { createPhenylMiddleware } from 'phenyl-express'
-// import {
-//     //createUserDefinitions,
-//     createNonUserDefinitions,
-//     createCustomCommandDefinitions,
-// } from './definition'
-// $FlowIssue(why-not-defined-exists-package)
-// import fixtures from 'phenyl-demo-domain/test/fixtures'
 import type {
     EntityMap,
 } from 'phenyl-demo-interfaces'
 
 import insertFixtures from './insertFixtures'
-// import customRequestHandler from './customRequestHandler'
-//import auditLog from './middleware/auditLog'
 
 const debug = _debug('phenyl-demo-mbaas:server')
 const __DEV__ = process.env.NODE_ENV === 'development'
-
-// const MBAAS_ENDPOINT = process.env.MBAAS_ENDPOINT   // 自身のURL。アクセスするためのリンク等を示す際に利用(メール等)
-// if (!MBAAS_ENDPOINT) {
-//     throw new Error('please set env MBAAS_ENDPOINT')
-// }
 
 const getConnection = async (): Promise<EntityClient<EntityMap>> => {
     if (__DEV__) {//とりあえずメモリデータベース
@@ -56,17 +40,7 @@ const main = async () => {
     }
 
     //PhenylrestAPIを作成するためのfunctionGroupe
-    const functionalGroup = {
-        // サーバーが持つ情報を取得するカスタムAPI
-        // customQueries: {},
-        // サーバーに副作用を起こすカスタムAPI
-        // customCommands: createCustomCommandDefinitions(entityClient),
-        // ログインという概念を持つリソース
-        //users: createUserDefinitions(entityClient),
-        // ログインという概念を持たないリソース
-        // nonUsers: createNonUserDefinitions(entityClient),
-    }
-    //
+    const functionalGroup = {}
     const sessionClient = entityClient.createSessionClient()
     // phenylのrestAPI作成
     const restApiHandler = PhenylRestApi.createFromFunctionalGroup(functionalGroup, {
@@ -76,7 +50,6 @@ const main = async () => {
 
     const app = express()
     app.use(cors()) // やる
-    //app.use(auditLog(sessionClient)) // やらない
     app.use(createPhenylMiddleware({ restApiHandler })) // restApiはnonUser一個、カスタムなしで作る
 
     app.listen(port, async () => {
