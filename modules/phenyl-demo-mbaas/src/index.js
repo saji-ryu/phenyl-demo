@@ -23,7 +23,8 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
         //初期データ投入
         await insertFixtures(client, fixtures)
         return client
-    }else{
+    } else {
+
         // TODO: NODE_ENVがdevelopmentじゃない時の処理を書く
     }
 }
