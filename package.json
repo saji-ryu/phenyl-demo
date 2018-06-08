@@ -10,7 +10,7 @@
     "packages": [
       "modules/*"
     ],
-    "nohoist": [
+    "nohoist": [ // TODO: nohoist消す！
       "herb-mbaas/**",
       "herb-mobile-rx-ja/!(herb-*)",
       "**/react-native",

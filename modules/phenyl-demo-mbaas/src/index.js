@@ -24,7 +24,7 @@ import insertFixtures from './insertFixtures'
 //import auditLog from './middleware/auditLog'
 
 const debug = _debug('phenyl-demo-mbaas:server')
-//const __DEV__ = process.env.NODE_ENV === 'development'
+const __DEV__ = process.env.NODE_ENV === 'development'
 
 // const MBAAS_ENDPOINT = process.env.MBAAS_ENDPOINT   // 自身のURL。アクセスするためのリンク等を示す際に利用(メール等)
 // if (!MBAAS_ENDPOINT) {
@@ -32,10 +32,11 @@ const debug = _debug('phenyl-demo-mbaas:server')
 // }
 
 const getConnection = async (): Promise<EntityClient<EntityMap>> => {
-    if (true) {//とりあえずメモリデータベース
+    if (__DEV__) {//とりあえずメモリデータベース
         debug('Use memory client')
         const client = createMemoryClient()
         const fixtures = {} // TODO: 後に初期データ投入で使いたくなるはず(by やまたつ)
+        //初期データ投入
         await insertFixtures(client, fixtures)
         return client
     }
@@ -46,12 +47,15 @@ const main = async () => {
      * entityClientは永続化層とのやりとりの抽象
      * EntityClient<EntityMap>
      */
+    //上参照clietが帰ってくる
     const entityClient: EntityClient<EntityMap> = await getConnection()
+    //port番号の指定およびチェック
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8888
     if (isNaN(port)) {
         throw new Error(`Environment variable 'PORT' must be integer: ${String(process.env.PORT)}`)
     }
-    //functionGroupeからPhenylrestAPIを作成
+
+    //PhenylrestAPIを作成するためのfunctionGroupe
     const functionalGroup = {
         // サーバーが持つ情報を取得するカスタムAPI
         // customQueries: {},
