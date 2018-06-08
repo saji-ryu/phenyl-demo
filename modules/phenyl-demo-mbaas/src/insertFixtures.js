@@ -24,8 +24,8 @@ export default async function insertFixtures(
       }
 
       try {
-        // $FlowIssue(entityName-is-valid-value)
         //　子要素の名前とさっきIDつけたその子要素の子要素を保存
+        // $FlowIssue(entityName-is-valid-value)
         await client.insertOne({ entityName, value });
         debug(`Inserted ${entityName}/${entityId}`);
       } catch (e) {

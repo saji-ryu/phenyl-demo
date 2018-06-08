@@ -1,0 +1,4 @@
+[options]
+suppress_comment=.*\\$FlowIssue(\\(.*\\))?
+suppress_type=$FlowIssue
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(>=0\\.\\(5[0-6]\\|[1-4][0-9]\\|[0-9]\\).[0-9]\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)?:? #[0-9]+

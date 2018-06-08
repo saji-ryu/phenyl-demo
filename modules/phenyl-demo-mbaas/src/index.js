@@ -14,17 +14,17 @@ const debug = _debug("phenyl-demo-mbaas:server");
 const __DEV__ = process.env.NODE_ENV === "development";
 
 const getConnection = async (): Promise<EntityClient<EntityMap>> => {
-  if (__DEV__) {
-    //とりあえずメモリデータベース
-    debug("Use memory client");
-    const client = createMemoryClient();
-    const fixtures = {}; // TODO:後に初期データ投入で使いたくなるはず(by やまたつ)
-    //初期データ投入
-    await insertFixtures(client, fixtures);
-    return client;
-  } else {
-    // TODO:NODE_ENVがdevelopmentじゃない時の処理を書く
-  }
+  //とりあえずメモリデータベース
+  debug("Use memory client");
+  const client = createMemoryClient();
+  const fixtures = {}; // TODO:後に初期データ投入で使いたくなるはず(by やまたつ)
+  //初期データ投入
+  await insertFixtures(client, fixtures);
+  return client;
+  /**TODO:
+   * 現在はmemoruDBを使っているがこれは本来developmentの時
+   * NODE_ENVがdevelopmentじゃない時の処理をあとで条件分岐で書く
+   */
 };
 
 const main = async () => {
