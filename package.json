@@ -9,18 +9,6 @@
   "workspaces": {
     "packages": [
       "modules/*"
-    ],
-    "nohoist": [ // TODO: nohoist消す！
-      "herb-mbaas/**",
-      "herb-mobile-rx-ja/!(herb-*)",
-      "**/react-native",
-      "**/react-native/**",
-      "**/react-native-!(web)",
-      "**/react-native-!(web)/**",
-      "**/@cureapp/hanamaru-*",
-      "**/@cureapp/hanamaru-*/**",
-      "**/phenyl-http-client",
-      "**/phenyl-http-client/**"
     ]
   }
 }
