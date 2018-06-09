@@ -22,7 +22,7 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
   await insertFixtures(client, fixtures);
   return client;
   /**TODO:
-   * 現在はmemoruDBを使っているがこれは本来developmentの時
+   * 現在はmemoryDBを使っているがこれは本来developmentの時
    * NODE_ENVがdevelopmentじゃない時の処理をあとで条件分岐で書く
    */
 };
