@@ -2,6 +2,7 @@
 import type { EntityClient } from "phenyl-interfaces";
 import { StandardUserDefinition } from "phenyl-standards";
 import type { EntityMap } from "phenyl-demo-interfaces";
+type AuthSetting = any;
 
 export default class AdminDefinition extends StandardUserDefinition<
   EntityMap,
