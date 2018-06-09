@@ -7,6 +7,7 @@ import type { EntityClient } from "phenyl-interfaces";
 import { createEntityClient as createMemoryClient } from "phenyl-memory-db";
 import { createPhenylMiddleware } from "phenyl-express";
 import type { EntityMap } from "phenyl-demo-interfaces";
+import { createUserDefinitions } from "./definition";
 
 import insertFixtures from "./insertFixtures";
 
@@ -17,7 +18,16 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
   //とりあえずメモリデータベース
   debug("Use memory client");
   const client = createMemoryClient();
-  const fixtures = {}; // TODO:後に初期データ投入で使いたくなるはず(by やまたつ)
+  const fixtures = {
+    user: {
+      // <- EntityName
+      hoge: {
+        // <- ID
+        email: "hoge@example.com",
+        password: "hogehoge"
+      }
+    }
+  }; // TODO:後に初期データ投入で使いたくなるはず(by やまたつ)
   //初期データ投入
   await insertFixtures(client, fixtures);
   return client;
@@ -43,7 +53,9 @@ const main = async () => {
   }
 
   //PhenylrestAPIを作成するためのfunctionGroupe　今は空
-  const functionalGroup = {};
+  const functionalGroup = {
+    users: createUserDefinitions(entityClient)
+  };
   // phenylsessionclientが何してるかわからない....
   const sessionClient = entityClient.createSessionClient();
   /** phenylのrestAPI作成
