@@ -31,7 +31,7 @@ describe("usecase", () => {
       });
       store.replaceReducer(combineReducers({ phenyl: phenylReducer }));
       await store.dispatch(
-        login({ email: "hoge@exampl.com", password: "hogehoge" })
+        login({ email: "hoge@example.com", password: "hogehoge" })
       );
       console.log(JSON.stringify(store.getActions(), null, 2));
       console.log(store.getState());

@@ -16,5 +16,7 @@ export default class AdminDefinition extends StandardUserDefinition<
       ttl: 1000 * 60 * 60
     });
   }
-  authorization = true;
+  async authorization(): Promise<boolean> {
+    return true;
+  }
 }
