@@ -18,7 +18,16 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
   //とりあえずメモリデータベース
   debug("Use memory client");
   const client = createMemoryClient();
-  const fixtures = {}; // TODO:後に初期データ投入で使いたくなるはず(by やまたつ)
+  const fixtures = {
+    user: {
+      // <- EntityName
+      hoge: {
+        // <- ID
+        email: "hoge@example.com",
+        password: "hogehoge"
+      }
+    }
+  }; // TODO:後に初期データ投入で使いたくなるはず(by やまたつ)
   //初期データ投入
   await insertFixtures(client, fixtures);
   return client;
