@@ -9,6 +9,12 @@
   "workspaces": {
     "packages": [
       "modules/*"
+    ],
+    "nohoist": [
+      "**/react-native",
+      "**/react-native/**",
+      "**/react-native-!(web)",
+      "**/react-native-!(web)/**"
     ]
   },
   "devDependencies": {
