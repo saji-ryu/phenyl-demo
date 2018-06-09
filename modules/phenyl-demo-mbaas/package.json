@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dest/index.js",
-    "start:dev": "DEBUG=mbaas:*,nodemon:* NODE_ENV=development nodemon src/index.js --exec babel-node --watch src",
+    "start:dev": "DEBUG=phenyl-demo-mbaas:*,nodemon:* NODE_ENV=development nodemon src/index.js --exec babel-node --watch src",
     "build": "npm run build:clean && npm run build:babel",
     "build:clean": "rm -rf dest && mkdir -p dest",
     "build:babel": "babel src --out-dir dest --source-maps",
