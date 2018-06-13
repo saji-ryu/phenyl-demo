@@ -1,6 +1,8 @@
 // @flow
 import { actions } from "phenyl-redux";
 
+import type { ThunkAction } from "phenyl-demo-interfaces";
+
 const getLoggedInUserEntity = state => {
   return {};
 };
@@ -18,7 +20,7 @@ export const login = ({
   password: string,
   /* awesome type */
   /** async以降の関数をそのままreturnするという意味 */
-}) => async (dispatch, getState): Promise<void> => {
+}): ThunkAction => async (dispatch, getState) => {
   try {
     // phenylのエラーをリセットする
     dispatch(

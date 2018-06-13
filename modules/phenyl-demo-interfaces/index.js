@@ -5,7 +5,7 @@
 export type EntityMap = {
   medicalStaff: {
     id: string,
-    name: string
+    name: string,
   },
   patient: any,
   prescriptionCode: any,
@@ -13,5 +13,13 @@ export type EntityMap = {
   medicalRecord: any,
   lesson: any,
   weightRecord: any,
-  resetPasswordTicket: any
+  resetPasswordTicket: any,
 };
+
+export type GetState = () => Object;
+export type Dispatch = <A>(action: A | Function) => A | Promise<void>;
+
+export type ThunkAction = (
+  dispatch: Dispatch,
+  getState: GetState
+) => Promise<void>;
