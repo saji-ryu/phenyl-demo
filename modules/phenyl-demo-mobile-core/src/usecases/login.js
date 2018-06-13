@@ -14,15 +14,15 @@ export const login = ({ email, password }) => async (dispatch, getState) => {
     dispatch(
       actions.assign([
         {
-          $set: { error: null }
-        }
-      ])
+          $set: { error: null },
+        },
+      ]),
     );
     await dispatch(
       actions.login({
         entityName: "user",
-        credentials: { email, password }
-      })
+        credentials: { email, password },
+      }),
     );
 
     const user = getLoggedInUserEntity(getState());
