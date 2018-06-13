@@ -1,4 +1,6 @@
 // @flow
+
+//ローカルでmbaasサーバーを立ち上げてからテスト実行すること
 import assert from "assert";
 import { combineReducers } from "redux";
 import thunkMiddleware from "redux-thunk";
@@ -16,8 +18,8 @@ describe("usecase", () => {
         thunkMiddleware,
         createMiddleware({
           client: httpClient,
-          storeKey: "phenyl"
-        })
+          storeKey: "phenyl",
+        }),
       ]);
     });
 
@@ -25,9 +27,9 @@ describe("usecase", () => {
       const store = createMockStore({
         phenyl: {
           network: {
-            requests: []
-          }
-        }
+            requests: [],
+          },
+        },
       });
       await store.dispatch(
         login({ email: "hoge@example.com", password: "foo" })
@@ -42,9 +44,9 @@ describe("usecase", () => {
       const store = createMockStore({
         phenyl: {
           network: {
-            requests: []
-          }
-        }
+            requests: [],
+          },
+        },
       });
       await store.dispatch(
         login({ email: "hoge@example.com", password: "hogehoge" })
