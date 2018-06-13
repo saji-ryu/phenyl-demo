@@ -8,20 +8,27 @@ const getLoggedInUserVersionId = state => {
   return "xxx";
 };
 
-export const login = ({ email, password }) => async (dispatch, getState) => {
+// TODO: prettierの設定(commmaをes5)
+// TODO: ここの型付け
+export const login = ({
+  email,
+  password,
+}: {
+  /* awesome type */
+}) => async (dispatch, getState) => {
   try {
     // phenylのエラーをリセットする
     dispatch(
       actions.assign([
         {
-          $set: { error: null }
-        }
+          $set: { error: null },
+        },
       ])
     );
     await dispatch(
       actions.login({
         entityName: "user",
-        credentials: { email, password }
+        credentials: { email, password },
       })
     );
 

@@ -24,9 +24,9 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
       hoge: {
         // <- ID
         email: "hoge@example.com",
-        password: "hogehoge"
-      }
-    }
+        password: "hogehoge",
+      },
+    },
   }; // TODO:後に初期データ投入で使いたくなるはず(by やまたつ)
   //初期データ投入
   await insertFixtures(client, fixtures);
@@ -54,7 +54,7 @@ const main = async () => {
 
   //PhenylrestAPIを作成するためのfunctionGroupe　今は空
   const functionalGroup = {
-    users: createUserDefinitions(entityClient)
+    users: createUserDefinitions(entityClient),
   };
   // phenylsessionclientが何してるかわからない....
   const sessionClient = entityClient.createSessionClient();
@@ -68,7 +68,7 @@ const main = async () => {
     functionalGroup,
     {
       client: entityClient,
-      sessionClient
+      sessionClient,
     }
   );
 
