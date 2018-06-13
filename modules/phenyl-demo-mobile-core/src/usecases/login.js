@@ -9,18 +9,14 @@ const getLoggedInUserEntity = state => {
 const getLoggedInUserVersionId = state => {
   return "xxx";
 };
-
-// TODO: prettierの設定(commmaをes5)
-// TODO: ここの型付け
 export const login = ({
   email,
   password,
 }: {
   email: string,
   password: string,
-  /* awesome type */
-  /** async以降の関数をそのままreturnするという意味 */
 }): ThunkAction => async (dispatch, getState) => {
+  /** async以降の関数をそのままreturnするという意味? */
   try {
     // phenylのエラーをリセットする
     dispatch(
