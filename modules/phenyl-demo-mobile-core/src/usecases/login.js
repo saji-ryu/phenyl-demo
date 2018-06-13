@@ -17,7 +17,8 @@ export const login = ({
   email: string,
   password: string,
   /* awesome type */
-}) => async (dispatch, getState) => {
+  /** async以降の関数をそのままreturnするという意味 */
+}) => async (dispatch, getState): Promise<void> => {
   try {
     // phenylのエラーをリセットする
     dispatch(
@@ -25,13 +26,13 @@ export const login = ({
         {
           $set: { error: null },
         },
-      ])
+      ]),
     );
     await dispatch(
       actions.login({
         entityName: "user",
         credentials: { email, password },
-      })
+      }),
     );
 
     const user = getLoggedInUserEntity(getState());
