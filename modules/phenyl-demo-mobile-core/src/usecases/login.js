@@ -14,6 +14,8 @@ export const login = ({
   email,
   password,
 }: {
+  email: string,
+  password: string,
   /* awesome type */
 }) => async (dispatch, getState) => {
   try {
