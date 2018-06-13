@@ -1,8 +1,10 @@
 // @flow
+
+//ローカルでmbaasサーバーを立ち上げてからテスト実行すること
 import assert from "assert";
 import { combineReducers } from "redux";
 import thunkMiddleware from "redux-thunk";
-import phenylReducer, { createMiddleware } from "phenyl-redux";
+import { createMiddleware } from "phenyl-redux";
 import PhenylHttpClient from "phenyl-http-client";
 import configureStore from "redux-mock-store";
 import { login } from "../../../src/usecases/login";
@@ -16,29 +18,44 @@ describe("usecase", () => {
         thunkMiddleware,
         createMiddleware({
           client: httpClient,
-          storeKey: "phenyl"
-        })
+          storeKey: "phenyl",
+        }),
       ]);
     });
 
-    it("should XXX when the email or password is incorrect", async () => {
+    it("should get error when the email or password is incorrect", async () => {
       const store = createMockStore({
         phenyl: {
           network: {
-            requests: []
-          }
-        }
+            requests: [],
+          },
+        },
       });
-      store.replaceReducer(combineReducers({ phenyl: phenylReducer }));
       await store.dispatch(
-        login({ email: "hoge@exampl.com", password: "hogehoge" })
+        login({ email: "hoge@example.com", password: "foo" })
       );
-      console.log(JSON.stringify(store.getActions(), null, 2));
-      console.log(store.getState());
+
+      const loginOperation = store.getActions()[2].payload[0];
+      assert.ok(loginOperation.$set.error);
+      assert.equal(loginOperation.$set.error.type, "Unauthorized");
     });
-    // it("should XXX when the email and password are correct", () => {
-    //   const store = createMockStore({});
-    //   store.dispatch(login({ email: "hoge@exampl.com", password: "hogehoge" }));
-    // });
+
+    it("should successfully login when the email and password are correct", async () => {
+      const store = createMockStore({
+        phenyl: {
+          network: {
+            requests: [],
+          },
+        },
+      });
+      await store.dispatch(
+        login({ email: "hoge@example.com", password: "hogehoge" })
+      );
+
+      const loginOperation = store.getActions()[2].payload[0];
+      assert.ok(loginOperation.$set.session);
+      assert.equal(loginOperation.$set.session.entityName, "user");
+      assert.equal(loginOperation.$set.session.userId, "hoge");
+    });
   });
 });
