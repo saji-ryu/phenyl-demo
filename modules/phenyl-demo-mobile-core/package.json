@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
+    "start:study": "node -r babel-register ./src/usecases/reduxStudy/dispatchTest.js ",
     "test": "mocha --require babel-polyfill --require babel-register --recursive test/spec/"
   },
   "author": "RyuseiSajiki",

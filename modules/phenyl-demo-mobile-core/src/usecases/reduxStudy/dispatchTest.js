@@ -3,13 +3,13 @@ import {
   toggleTodo,
   setVisibilityFilter,
   VisibilityFilters,
-} from "./src/actions";
+} from "./actions";
 
 import { store } from "./store";
 
 console.log(store.getState());
 
-const unsubscribe = store.subscibe(() => {
+const unsubscribe = store.subscribe(() => {
   console.log(store.getState());
 });
 
