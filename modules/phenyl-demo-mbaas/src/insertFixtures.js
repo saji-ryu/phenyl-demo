@@ -13,9 +13,10 @@ export default async function insertFixtures(
 ): Promise<void> {
   for (let entityName in fixtureGroups) {
     for (let entityId in fixtureGroups[entityName]) {
-      //fixtuesの中の各要素のなかの各要素に対して自分と同じID名をつけてマージ
+      //fixtuesの中の要素(userとか)のなかの各ID名を持つ要素に対して
+      //自分のID名をidという要素を足すのを繰り返す
       const value = Object.assign(fixtureGroups[entityName][entityId], {
-        id: entityId
+        id: entityId,
       });
       //passwordっていうプロパティを持っているか
       if (value.hasOwnProperty("password")) {
@@ -24,7 +25,7 @@ export default async function insertFixtures(
       }
 
       try {
-        //　子要素の名前とさっきIDつけたその子要素の子要素を保存
+        //　上で作った新しい各ID名を持つ要素を保存
         // $FlowIssue(entityName-is-valid-value)
         await client.insertOne({ entityName, value });
         debug(`Inserted ${entityName}/${entityId}`);

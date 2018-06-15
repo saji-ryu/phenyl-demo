@@ -1,28 +1,36 @@
 // @flow
 import { actions } from "phenyl-redux";
 
+import type { ThunkAction } from "phenyl-demo-interfaces";
+
 const getLoggedInUserEntity = state => {
   return {};
 };
 const getLoggedInUserVersionId = state => {
   return "xxx";
 };
-
-export const login = ({ email, password }) => async (dispatch, getState) => {
+export const login = ({
+  email,
+  password,
+}: {
+  email: string,
+  password: string,
+}): ThunkAction => async (dispatch, getState) => {
+  /** async以降の関数をそのままreturnするという意味? */
   try {
     // phenylのエラーをリセットする
     dispatch(
       actions.assign([
         {
-          $set: { error: null }
-        }
-      ])
+          $set: { error: null },
+        },
+      ]),
     );
     await dispatch(
       actions.login({
         entityName: "user",
-        credentials: { email, password }
-      })
+        credentials: { email, password },
+      }),
     );
 
     const user = getLoggedInUserEntity(getState());

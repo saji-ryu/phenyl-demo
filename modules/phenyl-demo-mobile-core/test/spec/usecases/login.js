@@ -32,7 +32,7 @@ describe("usecase", () => {
         },
       });
       await store.dispatch(
-        login({ email: "hoge@example.com", password: "foo" })
+        login({ email: "hoge@example.com", password: "foo" }),
       );
 
       const loginOperation = store.getActions()[2].payload[0];
@@ -49,7 +49,7 @@ describe("usecase", () => {
         },
       });
       await store.dispatch(
-        login({ email: "hoge@example.com", password: "hogehoge" })
+        login({ email: "hoge@example.com", password: "hogehoge" }),
       );
 
       const loginOperation = store.getActions()[2].payload[0];
