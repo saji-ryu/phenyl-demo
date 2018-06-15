@@ -36,7 +36,7 @@ export const login = ({
     );
     //getStateでstoreのStateをとり、それをgetLoggedInUser・・・でフィルタ（今はそのまま流してる）
     const user = getLoggedInUserEntity(getState());
-    const versionId = getLoggedInUserVersionId(getState()); 
+    const versionId = getLoggedInUserVersionId(getState());
     console.log({ user, versionId });
     //actions.followを投げる
     await dispatch(actions.follow("user", user, versionId));

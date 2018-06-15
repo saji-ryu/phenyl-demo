@@ -31,10 +31,16 @@ describe("usecase", () => {
           },
         },
       });
+      // storeにactionを投げてるはず
+      //てことはloginの戻り値はactionなはずなのだ
+      //actionはtypeプロパティを持った任意のオブジェクト
       await store.dispatch(
-        login({ email: "hoge@example.com", password: "foo" }),
+        //となるとやっぱりここがactionを返しているように見えない.......
+        login({ email: "hoge@example.com", password: "foo" })
       );
-
+      //getActionsは何をしている？
+      //redux-mock-storeの機能らしい
+      //action送ってからまでの経過がとれるっぽい？
       const loginOperation = store.getActions()[2].payload[0];
       assert.ok(loginOperation.$set.error);
       assert.equal(loginOperation.$set.error.type, "Unauthorized");
@@ -49,7 +55,7 @@ describe("usecase", () => {
         },
       });
       await store.dispatch(
-        login({ email: "hoge@example.com", password: "hogehoge" }),
+        login({ email: "hoge@example.com", password: "hogehoge" })
       );
 
       const loginOperation = store.getActions()[2].payload[0];
