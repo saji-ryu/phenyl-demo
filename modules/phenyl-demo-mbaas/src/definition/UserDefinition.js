@@ -13,7 +13,7 @@ export default class AdminDefinition extends StandardUserDefinition<
       entityClient: entityClient,
       accountPropName: "email",
       passwordPropName: "password",
-      ttl: 1000 * 60 * 60
+      ttl: 1000 * 60 * 60,
     });
   }
   async authorization(): Promise<boolean> {

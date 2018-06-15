@@ -14,17 +14,25 @@ describe("usecase", () => {
     let createMockStore;
     before(() => {
       const httpClient = new PhenylHttpClient({ url: "http://localhost:8888" });
+      /* middlewareを指定して、Storeのモックを作る関数を作る
+       * 渡すmiddlewearは配列
+       * middlewearを適用しmockstoreのインスタンスを作る関数をreturn
+       */
       createMockStore = configureStore([
+        //from redux-thunk
         thunkMiddleware,
+        //from phenyl redux
         createMiddleware({
           client: httpClient,
-          storeKey: "phenyl",
+          storeKey: "phenyl", //なんのkeyだろう
         }),
       ]);
     });
 
     it("should get error when the email or password is incorrect", async () => {
+      //Storeのインスタンス作成
       const store = createMockStore({
+        //何を指定している？storeの初期値？
         phenyl: {
           network: {
             requests: [],
@@ -40,7 +48,9 @@ describe("usecase", () => {
       );
       //getActionsは何をしている？
       //redux-mock-storeの機能らしい
-      //action送ってからまでの経過がとれるっぽい？
+      //storeのこれまでのactionが取れる？
+      //  redux-mock-storeの機能としてdispatchするとそのactionが配列として記憶される
+      //  これを持ってくる
       const loginOperation = store.getActions()[2].payload[0];
       assert.ok(loginOperation.$set.error);
       assert.equal(loginOperation.$set.error.type, "Unauthorized");
