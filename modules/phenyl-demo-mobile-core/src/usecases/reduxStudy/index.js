@@ -35,7 +35,9 @@ function setVisibilityFilter(filter) {
   return { type: SET_VISIBILITY_FILTER, filter };
 }
 
-//reducers
+/*
+ * reducers
+ */
 const { SHOW_ALL } = VisibilityFilters;
 
 function visibilityFilter(state = SHOW_ALL, action) {
