@@ -16,10 +16,13 @@ export type EntityMap = {
   resetPasswordTicket: any,
 };
 
+//TODO: もう少し型を堅くする
+export type Action = Object;
+
 export type GetState = () => Object;
-export type Dispatch = <A>(action: A | Function) => A | Promise<void>;
+export type Dispatch = (action: Action | ThunkAction) => Promise<void> | void;
 
 export type ThunkAction = (
   dispatch: Dispatch,
   getState: GetState
-) => Promise<void>;
+) => Promise<void> | void;

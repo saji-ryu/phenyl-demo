@@ -22,6 +22,7 @@ describe("usecase", () => {
         //from redux-thunk
         thunkMiddleware,
         //from phenyl redux
+        //middlewearとしてphenylと連携するための設定？
         createMiddleware({
           client: httpClient,
           storeKey: "phenyl", //なんのkeyだろう
@@ -43,7 +44,8 @@ describe("usecase", () => {
       //てことはloginの戻り値はactionなはずなのだ
       //actionはtypeプロパティを持った任意のオブジェクト
       await store.dispatch(
-        //となるとやっぱりここがactionを返しているように見えない.......
+        //redux-thunkの機能
+        //関数を投げるとそのstoreのdispatch機能とgetstate機能をその関数に渡すことができる
         login({ email: "hoge@example.com", password: "foo" })
       );
       //getActionsは何をしている？
