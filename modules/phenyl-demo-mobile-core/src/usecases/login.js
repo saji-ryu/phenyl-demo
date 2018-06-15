@@ -24,13 +24,13 @@ export const login = ({
         {
           $set: { error: null },
         },
-      ]),
+      ])
     );
     await dispatch(
       actions.login({
         entityName: "user",
         credentials: { email, password },
-      }),
+      })
     );
 
     const user = getLoggedInUserEntity(getState());
