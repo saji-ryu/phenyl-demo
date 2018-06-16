@@ -28,7 +28,7 @@ function memos(state = [], action) {
     default:
       return state.map(memo => {
         if (memo.id === action.payload.memo.id) {
-          return;
+          return null;
         }
         return memo;
       });

@@ -6,12 +6,12 @@ export type MemoData_Create = {
   content: MemoContent,
 };
 export type MemoData_Update = {
-  id: string,
+  id: number,
   title: MemoTitle,
   content: MemoContent,
 };
 export type MemoData_Delete = {
-  id: string,
+  id: number,
 };
 export type MemoTitle = string;
 
@@ -29,7 +29,7 @@ export type ReduxAction = {
   type: string,
   payload: {
     memo: {
-      id: string,
+      id: number,
       [key: string]: any,
     },
   },
