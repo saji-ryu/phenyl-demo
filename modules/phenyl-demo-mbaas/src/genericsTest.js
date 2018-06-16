@@ -2,7 +2,7 @@
 
 type Item<U> = {
   foo: number,
-  bar: string
+  bar: string,
 };
 
 function identity<T: string>(value: T): T {
@@ -10,11 +10,11 @@ function identity<T: string>(value: T): T {
   return value;
 }
 
-let test: Item<number> = { foo: 11, bar: 33 };
+let test: Item<number> = { foo: 11, bar: "aaa" };
 identity("aaa");
 
 type Item2<R> = {
-  prop: R
+  prop: R,
 };
 
 class cl<S> {
