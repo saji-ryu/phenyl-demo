@@ -19,7 +19,7 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>ホームページ</Text>
+        <Text>ホーム</Text>
         <Button
           title="詳細ページへ"
           onPress={() => this.props.navigation.navigate("Details")}
@@ -34,6 +34,10 @@ class DetailsScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Text>詳細ページ</Text>
+        <Button
+          title="ホームへ"
+          onPress={() => this.props.navigation.navigate("Home")}
+        />
       </View>
     );
   }
@@ -71,21 +75,21 @@ export default class App extends React.Component {
 //   }
 // }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF",
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10,
-  },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#F5FCFF",
+//   },
+//   welcome: {
+//     fontSize: 20,
+//     textAlign: "center",
+//     margin: 10,
+//   },
+//   instructions: {
+//     textAlign: "center",
+//     color: "#333333",
+//     marginBottom: 5,
+//   },
+// });
