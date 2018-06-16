@@ -5,6 +5,7 @@ import type {
   MemoData_Delete,
   UserData,
   ReduxAction,
+  MemoData,
 } from "./types";
 
 //export const ADD_USER = "ADD_USER";
@@ -38,26 +39,23 @@ export function createMemo(memoData: MemoData_Create): ReduxAction {
     },
   };
 }
-// export function UpdateMemoContent(memoId: MemoId, memoContent: MemoContent) {
-//   return { type: UPDATE_MEMO_CONTENT, id: memoId, content: memoContent };
-// }
+
 export function updateMemo(memoData: MemoData_Update): ReduxAction {
   let updatedAt = Number(Date.now());
-  return {
+  let updateData = {
     type: UPDATE_MEMO,
     payload: {
       memo: {
         id: memoData.id,
         updatedAt: updatedAt,
-        title: memoData.title,
-        content: memoData.content,
       },
     },
   };
+  if (memoData.title) updateData.payload.memo.title = memoData.title;
+  if (memoData.content) updateData.payload.memo.content = memoData.content;
+  return updateData;
 }
-// export function UpdateMemoTitle(memoId: MemoId, memoTitle: MemoTitle) {
-//   return { type: UPDATE_MEMO_TITLE, id: memoId, title: memoTitle };
-// }
+
 export function deleteMemo(memoData: MemoData_Delete): ReduxAction {
   return {
     type: DELETE_MEMO,

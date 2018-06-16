@@ -1,5 +1,12 @@
 //@flow
 //場合によって適宜堅く
+export type MemoData = {
+  id: number,
+  createdAt: number,
+  updatedAt: number,
+  title: MemoTitle,
+  content: MemoContent,
+};
 export type MemoData_Create = {
   id: number,
   title: MemoTitle,

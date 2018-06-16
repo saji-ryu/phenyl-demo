@@ -3,7 +3,6 @@ import { combineReducers } from "redux";
 import { CREATE_MEMO, UPDATE_MEMO, DELETE_MEMO } from "./actions";
 import type { ReduxAction } from "./types";
 
-//TODO:state(User情報の)の型あとで堅くする
 // function userSignIn(state: Object = {}, action: ReduxAction) {
 //   switch (action.type) {
 //     case ADD_USER:
