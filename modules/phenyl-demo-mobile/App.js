@@ -5,8 +5,9 @@
  */
 
 import React, { Component } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
-import { createStackNavigator } from "react-navigation";
+import { Platform, StyleSheet, Text, View, Button } from "react-native";
+import { StackNavigator } from "react-navigation";
+
 const instructions = Platform.select({
   ios: "Press Cmd+R to reload,\n" + "Cmd+D or shake for dev menu",
   android:
@@ -18,18 +19,45 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Home Screen</Text>
+        <Text>ホームページ</Text>
+        <Button
+          title="詳細ページへ"
+          onPress={() => this.props.navigation.navigate("Details")}
+        />
       </View>
     );
   }
 }
 
-export default createStackNavigator({
-  Home: {
-    screen: HomeScreen,
-  },
-});
+class DetailsScreen extends React.Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>詳細ページ</Text>
+      </View>
+    );
+  }
+}
 
+const RootStack = StackNavigator(
+  {
+    Home: {
+      screen: HomeScreen,
+    },
+    Details: {
+      screen: DetailsScreen,
+    },
+  },
+  {
+    initialRouteName: "Home",
+  }
+);
+
+export default class App extends React.Component {
+  render() {
+    return <RootStack />;
+  }
+}
 // type Props = {};
 // export default class App extends Component<Props> {
 //   render() {
