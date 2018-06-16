@@ -1,6 +1,7 @@
 //@flow
 //場合によって適宜堅く
 export type MemoData_Create = {
+  id: number,
   title: MemoTitle,
   content: MemoContent,
 };
@@ -11,10 +12,6 @@ export type MemoData_Update = {
 };
 export type MemoData_Delete = {
   id: string,
-  createdAt?: number,
-  updatedAt?: number,
-  title?: MemoTitle,
-  content?: MemoContent,
 };
 export type MemoTitle = string;
 

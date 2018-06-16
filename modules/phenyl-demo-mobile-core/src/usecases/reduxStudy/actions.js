@@ -29,7 +29,7 @@ export function createMemo(memoData: MemoData_Create): ReduxAction {
     type: CREATE_MEMO,
     payload: {
       memo: {
-        id: "id" + createdAt,
+        id: memoData.id,
         createdAt: createdAt,
         updatedAt: createdAt,
         title: memoData.title,
