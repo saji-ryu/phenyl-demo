@@ -6,19 +6,6 @@
   "author": "saji-ryu <rsajiki@gmail.com>",
   "license": "MIT",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "modules/*"
-    ],
-    "nohoist": [
-      "**/react-native",
-      "**/react-native/**",
-      "**/react-native-!(web)",
-      "**/react-native-!(web)/**",
-      "**/react-navigation",
-      "**/react-navigation/**"
-    ]
-  },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
     "eslint": "^4.19.1",
@@ -30,6 +17,7 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "flow-bin": "^0.74.0",
+    "lerna": "^2.11.0",
     "prettier": "^1.13.4"
   }
 }
