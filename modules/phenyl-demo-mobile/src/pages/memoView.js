@@ -6,7 +6,7 @@ export default class MemoViewScreen extends React.Component {
   static navigationOptions = ({ navigation, navigationOptions }) => {
     return {
       headerTitle: "タイトルが入る",
-      headerBackTitle: "Save",
+      headerBackTitle: null,
       headerRight: (
         <Button onPress={() => navigation.navigate("MemoEdit")} title="Edit" />
       ),

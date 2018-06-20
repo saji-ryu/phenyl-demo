@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from "react";
-import { StyleSheet, View, TextInput, Dimensions } from "react-native";
+import { StyleSheet, View, TextInput, Dimensions, Button } from "react-native";
 
 const screenSize = Dimensions.get("window");
 
@@ -9,6 +9,9 @@ export default class MemoEditScreen extends React.Component {
     return {
       headerTitle: (
         <TextInput style={styles.editMemoTitle} value="編集できる" />
+      ),
+      headerRight: (
+        <Button onPress={() => navigation.navigate("MemoView")} title="Save" />
       ),
     };
   };
