@@ -15,7 +15,7 @@ const screenSize = Dimensions.get("window");
 export default class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation, navigationOptions }) => {
     return {
-      headerTitle: "Memo",
+      headerTitle: "UserName",
       headerBackTitle: null,
       headerRight: (
         <Button onPress={() => navigation.navigate("NewMemo")} title="New" />
