@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     borderColor: "#424242",
     borderRadius: 5,
-    borderWidth: 0.5,
+    borderWidth: 1,
   },
   f1acjc: {
     flex: 1,
