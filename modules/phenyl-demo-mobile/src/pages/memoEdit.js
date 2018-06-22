@@ -1,32 +1,37 @@
 // @flow
 import React, { Component } from "react";
 import { StyleSheet, View, TextInput, Dimensions, Button } from "react-native";
+import { connect } from "react-redux";
 
 const screenSize = Dimensions.get("window");
 
-export default class MemoEditScreen extends React.Component {
-  static navigationOptions = ({ navigation, navigationOptions }) => {
-    return {
-      headerTitle: (
-        <TextInput style={styles.editMemoTitle} value="編集できる" />
-      ),
-      headerRight: (
-        <Button onPress={() => navigation.navigate("MemoView")} title="Save" />
-      ),
-    };
+const selector = state => {
+  return state.memos;
+};
+
+const mapStateToProps = state => {
+  return {
+    memo: selector(state),
   };
-  render() {
-    return (
-      <View style={styles.f1acjc}>
-        <TextInput
-          multiline
-          style={styles.editMemoContent}
-          value="メモの内容です"
-        />
-      </View>
-    );
-  }
-}
+};
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { navigation } = ownProps;
+  return {
+    handleTitleButton: navigation,
+  };
+};
+
+const MemoEditScreen = props => {
+  return (
+    <View style={styles.f1acjc}>
+      <TextInput
+        multiline
+        style={styles.editMemoContent}
+        value={props.memo.content}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   editMemoContent: {
@@ -51,3 +56,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MemoEditScreen);

@@ -1,31 +1,41 @@
 // @flow
 import React, { Component } from "react";
 import { StyleSheet, View, Button, TextInput, Dimensions } from "react-native";
+import { connect } from "react-redux";
 
 const screenSize = Dimensions.get("window");
 
-export default class NewMemoScreen extends React.Component {
-  static navigationOptions = ({ navigation, navigationOptions }) => {
-    return {
-      headerTitle: <TextInput style={styles.editMemoTitle} value="" />,
-      headerRight: (
-        <Button onPress={() => navigation.navigate("Home")} title="Save" />
-      ),
-    };
+const selector = state => {
+  return state.memos;
+};
+
+const mapStateToProps = state => {
+  return {
+    memos: selector(state),
   };
-  render() {
-    return (
-      <View style={styles.f1acjc}>
-        <TextInput
-          multiline
-          style={styles.editMemoContent}
-          //onChangeText={text => this.setState({ text })}
-          value=""
-        />
-      </View>
-    );
-  }
-}
+};
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { navigation } = ownProps;
+  return {
+    handleTitleButton: navigation,
+  };
+};
+
+const NewMemoScreen = props => {
+  // this.props.navigation.state.setParam({
+  //   onSaveClick: this.props.onSaveClick,
+  // });
+  return (
+    <View style={styles.f1acjc}>
+      <TextInput
+        multiline
+        style={styles.editMemoContent}
+        //onChangeText={text => this.setState({ text })}
+        value=""
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   editMemoContent: {
@@ -50,3 +60,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewMemoScreen);

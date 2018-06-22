@@ -9,39 +9,73 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import { connect } from "react-redux";
 
 const screenSize = Dimensions.get("window");
 
-export default class HomeScreen extends React.Component {
-  static navigationOptions = ({ navigation, navigationOptions }) => {
-    return {
-      headerTitle: "UserName",
-      headerBackTitle: null,
-      headerRight: (
-        <Button onPress={() => navigation.navigate("NewMemo")} title="New" />
-      ),
-    };
-  };
+// const aaa = (props: Props) => {
+//   const { hoge, state } = props;
+//   return hoge;
+// };
 
-  render() {
-    let titles = [];
-    for (let index = 0; index < 10; index++) {
-      titles.push(
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("MemoView")}
-          style={styles.memoTitle}
-        >
-          <Text style={{ margin: 10, fontSize: 25 }}>Title{index + 1}</Text>
-        </TouchableOpacity>
-      );
-    }
-    return (
-      <ScrollView>
-        <View style={{ flex: 1, flexDirection: "column" }}>{titles}</View>
-      </ScrollView>
-    );
-  }
-}
+// import hogeAvction from "../../actrions/hoge";
+// const mapStateToPtops = (state: State) => {
+//   return {
+//     oreore: selector(state),
+//   }; // selector => pkg named 'reselect'
+// };
+// const mapDispatchToPtops = (dispatch: Dispatch, ownProps: OwnProps) => {
+//   const { navigation } = ownProps;
+//   return {
+//     handleClickHogeButton: e => {
+//       const onSuccess  = (customer) => navigation.navigate('to_home', payload: {customer})
+//       const onFalure  = e => navigation.navigate('to_home')
+//       dispatch(hogeAvction(e.value, onSuccess, onFalure)).then(
+//         onSuccess,
+//         onFalure,
+//       )
+//     },
+//   };
+// };
+
+// const WrappedAaa = connect(
+//   mapStateToPtops,
+//   mapDispatchToPtops
+// )(aaa);
+const selector = state => {
+  return state.memos;
+};
+
+const mapStateToProps = state => {
+  return {
+    memos: selector(state),
+  };
+};
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { navigation } = ownProps;
+  return {
+    handleTitleButton: navigation,
+  };
+};
+
+const HomeScreen = props => {
+  return (
+    <ScrollView>
+      <View style={{ flex: 1, flexDirection: "column" }}>
+        {props.memos.map(memo => {
+          return (
+            <TouchableOpacity
+              onPress={() => props.handleTitleButton.navigate("MemoView")}
+              style={styles.memoTitle}
+            >
+              <Text style={{ margin: 10, fontSize: 25 }}>{memo.title}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   memoTitle: {
@@ -56,3 +90,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeScreen);

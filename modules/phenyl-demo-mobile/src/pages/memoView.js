@@ -1,22 +1,33 @@
 // @flow
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Button, Dimensions } from "react-native";
+import { connect } from "react-redux";
 
-export default class MemoViewScreen extends React.Component {
-  static navigationOptions = ({ navigation, navigationOptions }) => {
-    return {
-      headerTitle: "タイトルが入る",
-      headerBackTitle: null,
-      headerRight: (
-        <Button onPress={() => navigation.navigate("MemoEdit")} title="Edit" />
-      ),
-    };
+const selector = state => {
+  return state.memos;
+};
+
+const mapStateToProps = state => {
+  return {
+    memos: selector(state),
   };
-  render() {
-    return (
-      <View style={{ flex: 1, margin: 10 }}>
-        <Text style={{ fontSize: 20 }}>メモの内容です</Text>
-      </View>
-    );
-  }
-}
+};
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { navigation } = ownProps;
+  return {
+    handleTitleButton: navigation,
+  };
+};
+
+const MemoViewScreen = props => {
+  return (
+    <View style={{ flex: 1, margin: 10 }}>
+      <Text style={{ fontSize: 20 }}>{props.memos[1].content}</Text>
+    </View>
+  );
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MemoViewScreen);
