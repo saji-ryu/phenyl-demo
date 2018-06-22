@@ -126,7 +126,7 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   editMemoTitle: {
-    height: 30,
+    height: 25,
     width: 200,
     fontSize: 20,
     borderColor: "#424242",
