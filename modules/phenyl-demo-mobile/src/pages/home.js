@@ -17,10 +17,13 @@ const screenSize = Dimensions.get("window");
 const selector = state => {
   return state.memos;
 };
-
+const pageSelector = state => {
+  return state.page;
+};
 const mapStateToProps = state => {
   return {
     memos: selector(state),
+    page: pageSelector(state),
   };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -46,19 +49,26 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(pageTo(pageData));
       navigation.navigate(pageData.name);
     },
+    handlePageInfo: pageData => {
+      dispatch(pageTo(pageData));
+    },
   };
 };
 
 class HomeScreen extends React.Component {
   componentDidMount() {
+    this.props.handlePageInfo({
+      name: "Home",
+      index: 0,
+    });
     this.props.navigation.setParams({
       toNew: () => {
-        console.log(this.props.memos.length);
         this.props.handleNewMemo(this.props.memos.length);
       },
     });
   }
   render() {
+    console.log("here is" + this.props.page.name);
     return (
       <ScrollView>
         <View style={{ flex: 1, flexDirection: "column" }}>

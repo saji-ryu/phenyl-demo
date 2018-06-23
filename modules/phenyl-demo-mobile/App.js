@@ -44,7 +44,7 @@ const RootStack = createStackNavigator(
     },
     MemoView: {
       screen: MemoViewScreen,
-      navigationOptions: ({ navigation, navigationOptions }) => {
+      navigationOptions: ({ navigation }) => {
         return {
           headerTitle: store.getState().memos[
             store.getState().memos.length - store.getState().page.index - 1
@@ -53,7 +53,7 @@ const RootStack = createStackNavigator(
           headerRight: (
             <Button
               onPress={() => {
-                navigation.state.params.toEditPage;
+                navigation.state.params.toEditPage();
                 navigation.navigate("MemoEdit");
               }}
               title="Edit"

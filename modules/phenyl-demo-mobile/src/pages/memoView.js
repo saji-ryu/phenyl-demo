@@ -34,7 +34,7 @@ class MemoViewScreen extends React.Component {
       toEditPage: () => {
         this.props.handleEditButton({
           name: "MemoEdit",
-          index: navigation.state.params.index,
+          index: this.props.page.index,
         });
       },
       title: this.props.memos[
