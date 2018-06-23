@@ -15,7 +15,7 @@ const pageSelector = state => {
 
 const mapStateToProps = state => {
   return {
-    memo: selector(state),
+    memos: selector(state),
     page: pageSelector(state),
   };
 };
@@ -33,7 +33,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 };
 
 class MemoEditScreen extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     console.log(this);
     this.props.navigation.setParams({
       toUpdate: () => {
@@ -48,7 +48,7 @@ class MemoEditScreen extends React.Component {
           title: titleText,
         });
       },
-      title: this.props.memo[this.props.page.index].title,
+      //title: this.props.memo[this.props.page.index].title,
     });
   }
   render() {
@@ -57,7 +57,11 @@ class MemoEditScreen extends React.Component {
         <TextInput
           multiline
           style={styles.editMemoContent}
-          value={this.props.memo[this.props.page.index].content}
+          value={
+            this.props.memos[
+              this.props.memos.length - this.props.page.index - 1
+            ].content
+          }
           onChangeText={text => {
             this.props.handleSaveContent({
               id: this.props.page.index,

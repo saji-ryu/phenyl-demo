@@ -46,7 +46,9 @@ const RootStack = createStackNavigator(
       screen: MemoViewScreen,
       navigationOptions: ({ navigation, navigationOptions }) => {
         return {
-          headerTitle: "とりあずtitle",
+          headerTitle: store.getState().memos[
+            store.getState().memos.length - store.getState().page.index - 1
+          ].title,
           headerBackTitle: null,
           headerRight: (
             <Button
@@ -62,12 +64,18 @@ const RootStack = createStackNavigator(
     },
     MemoEdit: {
       screen: MemoEditScreen,
-      navigationOptions: ({ navigation, navigationOptions }) => {
+      navigationOptions: ({ navigation }) => {
         return {
           headerTitle: (
             <TextInput
               style={styles.editMemoTitle}
-              value="編集できる"
+              value={
+                store.getState().memos[
+                  store.getState().memos.length -
+                    store.getState().page.index -
+                    1
+                ].title
+              }
               onChangeText={text => {
                 navigation.state.params.updateTitle(text);
               }}
