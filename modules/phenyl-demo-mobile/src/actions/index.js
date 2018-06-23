@@ -1,4 +1,4 @@
-//@flow
+// @flow
 import type {
   MemoData_Create,
   MemoData_Update,
@@ -6,12 +6,16 @@ import type {
   UserData,
   ReduxAction,
   MemoData,
+  pageData,
 } from "./types";
 
 //export const ADD_USER = "ADD_USER";
 export const CREATE_MEMO = "CREATE_MEMO";
 export const UPDATE_MEMO = "UPDATE_MEMO";
 export const DELETE_MEMO = "DELETE_MEMO";
+
+export const PAGE_TO = "PAGE_TO";
+//export const SAVE = "SAVE";
 
 // 後で考える
 // export function addUser(userData: UserData) {
@@ -63,6 +67,16 @@ export function deleteMemo(memoData: MemoData_Delete): ReduxAction {
       memo: {
         id: memoData.id,
       },
+    },
+  };
+}
+
+export function pageTo(pageData: PgaeData): ReduxAction {
+  return {
+    type: PAGE_TO,
+    payload: {
+      name: pageData.name,
+      index: pageData.index,
     },
   };
 }

@@ -41,3 +41,8 @@ export type ReduxAction = {
     },
   },
 };
+
+export type PgaeData = {
+  name: string,
+  index: number,
+};

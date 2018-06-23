@@ -1,6 +1,11 @@
 //@flow
 import { combineReducers } from "redux";
-import { CREATE_MEMO, UPDATE_MEMO, DELETE_MEMO } from "../actions/index";
+import {
+  CREATE_MEMO,
+  UPDATE_MEMO,
+  DELETE_MEMO,
+  PAGE_TO,
+} from "../actions/index";
 import type { MemoData } from "../types";
 import type { ReduxAction } from "../types";
 
@@ -14,39 +19,18 @@ import type { ReduxAction } from "../types";
 // }
 const initMemoState: MemoData = [
   {
-    id: 1,
+    id: 0,
     createdAt: 0,
     updatedAt: 11111,
-    title: "test1",
-    content: "This page is No1",
-  },
-  {
-    id: 2,
-    createdAt: 1,
-    updatedAt: 12111,
-    title: "test2",
-    content: "This page is No2",
-  },
-  {
-    id: 3,
-    createdAt: 2,
-    updatedAt: 14441,
-    title: "test3",
-    content: "This page is No3",
-  },
-  {
-    id: 4,
-    createdAt: 4,
-    updatedAt: 331311,
-    title: "test4",
-    content: "This page is No4",
+    title: "Hello",
+    content: "This is tutorial page",
   },
 ];
 
 function memos(state = initMemoState, action) {
   switch (action.type) {
     case CREATE_MEMO:
-      return [...state, action.payload.memo];
+      return [action.payload.memo, ...state];
     case UPDATE_MEMO:
       return state.map(memo => {
         if (memo.id === action.payload.memo.id) {
@@ -66,7 +50,22 @@ function memos(state = initMemoState, action) {
   }
 }
 
+const initPageState = {
+  name: "Login",
+  index: 1,
+};
+
+function page(state = initPageState, action) {
+  switch (action.type) {
+    case PAGE_TO:
+      return Object.assign({}, state, action.payload);
+    default:
+      return state;
+  }
+}
+
 const memoApp = combineReducers({
   memos,
+  page,
 });
 export default memoApp;

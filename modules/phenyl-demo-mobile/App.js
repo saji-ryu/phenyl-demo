@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from "react";
-import { StackNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation";
 import { Provider, connect } from "react-redux";
 import {
   StyleSheet,
@@ -22,7 +22,7 @@ import NewMemoScreen from "./src/pages/newMemo";
 import { createStore } from "redux";
 import memoApp from "./src/reducers/index";
 
-const RootStack = StackNavigator(
+const RootStack = createStackNavigator(
   {
     Home: {
       screen: HomeScreen,
@@ -32,7 +32,10 @@ const RootStack = StackNavigator(
           headerBackTitle: null,
           headerRight: (
             <Button
-              onPress={() => navigation.navigate("NewMemo")}
+              onPress={() => {
+                navigation.state.params.toNew();
+                navigation.navigate("NewMemo");
+              }}
               title="New"
             />
           ),
@@ -43,11 +46,14 @@ const RootStack = StackNavigator(
       screen: MemoViewScreen,
       navigationOptions: ({ navigation, navigationOptions }) => {
         return {
-          headerTitle: "タイトルが入る",
+          headerTitle: "とりあずtitle",
           headerBackTitle: null,
           headerRight: (
             <Button
-              onPress={() => navigation.navigate("MemoEdit")}
+              onPress={() => {
+                navigation.state.params.toEditPage;
+                navigation.navigate("MemoEdit");
+              }}
               title="Edit"
             />
           ),
@@ -59,7 +65,13 @@ const RootStack = StackNavigator(
       navigationOptions: ({ navigation, navigationOptions }) => {
         return {
           headerTitle: (
-            <TextInput style={styles.editMemoTitle} value="編集できる" />
+            <TextInput
+              style={styles.editMemoTitle}
+              value="編集できる"
+              onChangeText={text => {
+                navigation.state.params.updateTitle(text);
+              }}
+            />
           ),
           headerRight: (
             <Button
@@ -72,7 +84,7 @@ const RootStack = StackNavigator(
     },
     Login: {
       screen: LoginScreen,
-      navigationOptions: ({ navigation, navigationOptions }) => {
+      navigationOptions: ({ navigation }) => {
         return {
           headerTitle: "Login",
           headerBackTitle: "Logout",
@@ -83,16 +95,19 @@ const RootStack = StackNavigator(
       screen: NewMemoScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          headerTitle: <TextInput style={styles.editMemoTitle} value="" />,
+          headerTitle: (
+            <TextInput
+              style={styles.editMemoTitle}
+              value=""
+              onChangeText={text => {
+                navigation.state.params.saveTitle(text);
+              }}
+            />
+          ),
           headerRight: (
             <Button
               onPress={() => {
-                // let dispatchSaveMemo = navigation.gegetParam("onSaveClick");
-                // dispatchSaveMemo({
-                //   id: 1,
-                //   title: "test title",
-                //   content: "this is test content",
-                // });
+                navigation.state.params.toSave;
                 navigation.navigate("Home");
               }}
               title="Save"

@@ -10,38 +10,10 @@ import {
   Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
+import { pageTo, createMemo } from "../actions";
 
 const screenSize = Dimensions.get("window");
 
-// const aaa = (props: Props) => {
-//   const { hoge, state } = props;
-//   return hoge;
-// };
-
-// import hogeAvction from "../../actrions/hoge";
-// const mapStateToPtops = (state: State) => {
-//   return {
-//     oreore: selector(state),
-//   }; // selector => pkg named 'reselect'
-// };
-// const mapDispatchToPtops = (dispatch: Dispatch, ownProps: OwnProps) => {
-//   const { navigation } = ownProps;
-//   return {
-//     handleClickHogeButton: e => {
-//       const onSuccess  = (customer) => navigation.navigate('to_home', payload: {customer})
-//       const onFalure  = e => navigation.navigate('to_home')
-//       dispatch(hogeAvction(e.value, onSuccess, onFalure)).then(
-//         onSuccess,
-//         onFalure,
-//       )
-//     },
-//   };
-// };
-
-// const WrappedAaa = connect(
-//   mapStateToPtops,
-//   mapDispatchToPtops
-// )(aaa);
 const selector = state => {
   return state.memos;
 };
@@ -54,28 +26,64 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { navigation } = ownProps;
   return {
-    handleTitleButton: navigation,
+    navigation: navigation,
+    handleNewMemo: id => {
+      dispatch(
+        createMemo({
+          id: id,
+          title: "newTitle",
+          content: "new Memo",
+        })
+      );
+      dispatch(
+        pageTo({
+          name: "NewMemo",
+          index: id,
+        })
+      );
+    },
+    handleTitleButton: pageData => {
+      dispatch(pageTo(pageData));
+      navigation.navigate(pageData.name);
+    },
   };
 };
 
-const HomeScreen = props => {
-  return (
-    <ScrollView>
-      <View style={{ flex: 1, flexDirection: "column" }}>
-        {props.memos.map(memo => {
-          return (
-            <TouchableOpacity
-              onPress={() => props.handleTitleButton.navigate("MemoView")}
-              style={styles.memoTitle}
-            >
-              <Text style={{ margin: 10, fontSize: 25 }}>{memo.title}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </ScrollView>
-  );
-};
+class HomeScreen extends React.Component {
+  componentDidMount() {
+    this.props.navigation.setParams({
+      toNew: () => {
+        console.log(this.props.memos.length);
+        this.props.handleNewMemo(this.props.memos.length);
+      },
+    });
+  }
+  render() {
+    return (
+      <ScrollView>
+        <View style={{ flex: 1, flexDirection: "column" }}>
+          {this.props.memos.map(memo => {
+            return (
+              <TouchableOpacity
+                //onPress={() => props.handleTitleButton.navigate("MemoView")}
+                onPress={() => {
+                  console.log(memo.id);
+                  this.props.handleTitleButton({
+                    name: "MemoView",
+                    index: memo.id,
+                  });
+                }}
+                style={styles.memoTitle}
+              >
+                <Text style={{ margin: 10, fontSize: 25 }}>{memo.title}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </ScrollView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   memoTitle: {
