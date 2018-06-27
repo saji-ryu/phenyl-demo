@@ -1,18 +1,54 @@
 // @flow
 import React, { Component } from "react";
 import { StyleSheet, View, Button, TextInput, Dimensions } from "react-native";
+import { connect } from "react-redux";
+import { pageTo, updateMemo } from "../actions";
 
 const screenSize = Dimensions.get("window");
 
-export default class NewMemoScreen extends React.Component {
-  static navigationOptions = ({ navigation, navigationOptions }) => {
-    return {
-      headerTitle: <TextInput style={styles.editMemoTitle} value="" />,
-      headerRight: (
-        <Button onPress={() => navigation.navigate("Home")} title="Save" />
-      ),
-    };
+const selector = state => {
+  return state.memos;
+};
+const pageSelector = state => {
+  return state.page;
+};
+const mapStateToProps = state => {
+  return {
+    memo: selector(state),
+    page: pageSelector(state),
   };
+};
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { navigation } = ownProps;
+  return {
+    navigation: navigation,
+    handleSaveButton: pageData => {
+      dispatch(pageTo(pageData));
+    },
+    handleSaveContent: memoData => {
+      dispatch(updateMemo(memoData));
+    },
+  };
+};
+
+class NewMemoScreen extends React.Component {
+  componentDidMount() {
+    //console.log(this);
+    this.props.navigation.setParams({
+      toSave: () => {
+        this.props.handleSaveButton({
+          name: "Home",
+        });
+      },
+      saveTitle: titleText => {
+        this.props.handleSaveContent({
+          id: this.props.page.index,
+          title: titleText,
+        });
+      },
+      title: this.props.memo[this.props.page.index].title,
+    });
+  }
   render() {
     return (
       <View style={styles.f1acjc}>
@@ -21,6 +57,12 @@ export default class NewMemoScreen extends React.Component {
           style={styles.editMemoContent}
           //onChangeText={text => this.setState({ text })}
           value=""
+          onChangeText={text => {
+            this.props.handleSaveContent({
+              id: this.props.page.index,
+              content: text,
+            });
+          }}
         />
       </View>
     );
@@ -50,3 +92,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewMemoScreen);

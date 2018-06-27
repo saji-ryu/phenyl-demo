@@ -1,4 +1,8 @@
 node_modules
 .idea
 .vscode
+<<<<<<< HEAD
 .vs
+=======
+.vs
+>>>>>>> feature/reactNativeRedux

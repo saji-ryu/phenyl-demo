@@ -1,27 +1,73 @@
 // @flow
 import React, { Component } from "react";
 import { StyleSheet, View, TextInput, Dimensions, Button } from "react-native";
+import { connect } from "react-redux";
+import { pageTo, updateMemo } from "../actions";
 
 const screenSize = Dimensions.get("window");
 
-export default class MemoEditScreen extends React.Component {
-  static navigationOptions = ({ navigation, navigationOptions }) => {
-    return {
-      headerTitle: (
-        <TextInput style={styles.editMemoTitle} value="編集できる" />
-      ),
-      headerRight: (
-        <Button onPress={() => navigation.navigate("MemoView")} title="Save" />
-      ),
-    };
+const selector = state => {
+  return state.memos;
+};
+const pageSelector = state => {
+  return state.page;
+};
+
+const mapStateToProps = state => {
+  return {
+    memos: selector(state),
+    page: pageSelector(state),
   };
+};
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { navigation } = ownProps;
+  return {
+    navigation: navigation,
+    handleUpdateButton: pageData => {
+      dispatch(pageTo(pageData));
+    },
+    handleSaveContent: memoData => {
+      dispatch(updateMemo(memoData));
+    },
+  };
+};
+
+class MemoEditScreen extends React.Component {
+  componentWillMount() {
+    console.log(this);
+    this.props.navigation.setParams({
+      toUpdate: () => {
+        this.props.handleUpdateButton({
+          name: "MemoView",
+          index: navigation.state.params.index,
+        });
+      },
+      updateTitle: titleText => {
+        this.props.handleSaveContent({
+          id: this.props.page.index,
+          title: titleText,
+        });
+      },
+      //title: this.props.memo[this.props.page.index].title,
+    });
+  }
   render() {
     return (
       <View style={styles.f1acjc}>
         <TextInput
           multiline
           style={styles.editMemoContent}
-          value="メモの内容です"
+          value={
+            this.props.memos[
+              this.props.memos.length - this.props.page.index - 1
+            ].content
+          }
+          onChangeText={text => {
+            this.props.handleSaveContent({
+              id: this.props.page.index,
+              content: text,
+            });
+          }}
         />
       </View>
     );
@@ -51,3 +97,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MemoEditScreen);

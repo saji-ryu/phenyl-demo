@@ -9,35 +9,87 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import { connect } from "react-redux";
+import { pageTo, createMemo } from "../actions";
 
 const screenSize = Dimensions.get("window");
 
-export default class HomeScreen extends React.Component {
-  static navigationOptions = ({ navigation, navigationOptions }) => {
-    return {
-      headerTitle: "UserName",
-      headerBackTitle: null,
-      headerRight: (
-        <Button onPress={() => navigation.navigate("NewMemo")} title="New" />
-      ),
-    };
+const selector = state => {
+  return state.memos;
+};
+const pageSelector = state => {
+  return state.page;
+};
+const mapStateToProps = state => {
+  return {
+    memos: selector(state),
+    page: pageSelector(state),
   };
-
-  render() {
-    let titles = [];
-    for (let index = 0; index < 10; index++) {
-      titles.push(
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("MemoView")}
-          style={styles.memoTitle}
-        >
-          <Text style={{ margin: 10, fontSize: 25 }}>Title{index + 1}</Text>
-        </TouchableOpacity>
+};
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { navigation } = ownProps;
+  return {
+    navigation: navigation,
+    handleNewMemo: id => {
+      dispatch(
+        createMemo({
+          id: id,
+          title: "newTitle",
+          content: "new Memo",
+        })
       );
-    }
+      dispatch(
+        pageTo({
+          name: "NewMemo",
+          index: id,
+        })
+      );
+    },
+    handleTitleButton: pageData => {
+      dispatch(pageTo(pageData));
+      navigation.navigate(pageData.name);
+    },
+    handlePageInfo: pageData => {
+      dispatch(pageTo(pageData));
+    },
+  };
+};
+
+class HomeScreen extends React.Component {
+  componentDidMount() {
+    this.props.handlePageInfo({
+      name: "Home",
+      index: 0,
+    });
+    this.props.navigation.setParams({
+      toNew: () => {
+        this.props.handleNewMemo(this.props.memos.length);
+      },
+    });
+  }
+  render() {
+    console.log("here is" + this.props.page.name);
     return (
       <ScrollView>
-        <View style={{ flex: 1, flexDirection: "column" }}>{titles}</View>
+        <View style={{ flex: 1, flexDirection: "column" }}>
+          {this.props.memos.map(memo => {
+            return (
+              <TouchableOpacity
+                //onPress={() => props.handleTitleButton.navigate("MemoView")}
+                onPress={() => {
+                  console.log(memo.id);
+                  this.props.handleTitleButton({
+                    name: "MemoView",
+                    index: memo.id,
+                  });
+                }}
+                style={styles.memoTitle}
+              >
+                <Text style={{ margin: 10, fontSize: 25 }}>{memo.title}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </ScrollView>
     );
   }
@@ -56,3 +108,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HomeScreen);
