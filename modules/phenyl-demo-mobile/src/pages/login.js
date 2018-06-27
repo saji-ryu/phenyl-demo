@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
+import { actions } from "phenyl-redux";
 
 const screenSize = Dimensions.get("window");
 
@@ -18,8 +19,31 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { navigation } = ownProps;
   return {
+    login: mobileUser => {
+      dispatch(loginOperation(mobileUser));
+    },
     handleTitleButton: navigation,
   };
+};
+
+const loginOperation = ({ email, password }) => async (dispatch, getState) => {
+  try {
+    dispatch(
+      actions.assign([
+        {
+          $set: { error: null },
+        },
+      ])
+    );
+    await dispatch(
+      actions.login({
+        entityName: "user",
+        credentials: { email, password },
+      })
+    );
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const LoginScreen = props => {
@@ -45,7 +69,10 @@ const LoginScreen = props => {
       </View>
       <View style={styles.f1acjc}>
         <Button
-          onPress={() => props.navigation.navigate("Home")}
+          onPress={() => {
+            props.login({ email: "hoge@example.com", password: "hogehoge" });
+            props.navigation.navigate("Home");
+          }}
           title="Login"
         />
       </View>

@@ -17,7 +17,7 @@ import type { ReduxAction } from "../types";
 //       return state;
 //   }
 // }
-const initMemoState: MemoData = [
+const initMemoState = [
   {
     id: 0,
     createdAt: 0,
@@ -28,6 +28,7 @@ const initMemoState: MemoData = [
 ];
 
 function memos(state = initMemoState, action) {
+  console.log(action);
   switch (action.type) {
     case CREATE_MEMO:
       return [action.payload.memo, ...state];
