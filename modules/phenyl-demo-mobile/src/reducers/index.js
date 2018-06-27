@@ -64,8 +64,8 @@ function page(state = initPageState, action) {
   }
 }
 
-const memoApp = combineReducers({
-  memos,
-  page,
-});
-export default memoApp;
+// const memoApp = combineReducers({
+//   memos,
+//   page,
+// });
+export { memos, page };

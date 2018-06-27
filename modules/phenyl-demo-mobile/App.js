@@ -2,6 +2,8 @@
 import React, { Component } from "react";
 import { createStackNavigator } from "react-navigation";
 import { Provider, connect } from "react-redux";
+import phenylReducer, { createMiddleware } from "phenyl-redux/jsnext";
+import PhenylHttpClient from "phenyl-http-client/jsnext";
 import {
   StyleSheet,
   Text,
@@ -19,8 +21,9 @@ import MemoViewScreen from "./src/pages/memoView";
 import MemoEditScreen from "./src/pages/memoEdit";
 import NewMemoScreen from "./src/pages/newMemo";
 
-import { createStore } from "redux";
-import memoApp from "./src/reducers/index";
+import { createStore, applyMiddleware, combineReducers } from "redux";
+//import memoApp from "./src/reducers/index";
+import { memos, page } from "./src/reducers/index";
 
 const RootStack = createStackNavigator(
   {
@@ -130,7 +133,19 @@ const RootStack = createStackNavigator(
   }
 );
 
-const store = createStore(memoApp);
+const httpClient = new PhenylHttpClient({ url: "localhost:8888" });
+const reducers = combineReducers({
+  memos,
+  page,
+  phenyl: phenylReducer,
+});
+const middlewares = applyMiddleware(
+  createMiddleware({
+    client: httpClient,
+    storeKey: "phenyl",
+  })
+);
+const store = createStore(reducers, middlewares);
 
 console.log(store.getState());
 const unsubscribe = store.subscribe(() => {
