@@ -20,13 +20,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { navigation } = ownProps;
   return {
     login: mobileUser => {
-      dispatch(loginOperation(mobileUser));
+      dispatch(loginOperation(mobileUser, navigation));
     },
-    handleTitleButton: navigation,
   };
 };
 
-const loginOperation = ({ email, password }) => async (dispatch, getState) => {
+const loginOperation = ({ email, password }, navigation) => async (
+  dispatch,
+  getState
+) => {
   try {
     dispatch(
       actions.assign([
@@ -41,6 +43,49 @@ const loginOperation = ({ email, password }) => async (dispatch, getState) => {
         credentials: { email, password },
       })
     );
+    const session = getState().phenyl.session;
+    const user = getState().phenyl.entities.user[session.userId].origin;
+    const versionId = getState().phenyl.entities.user[session.userId].versionId;
+    //const session = getLoggedInSession(getState());
+    await dispatch(actions.follow("user", user, versionId));
+    if (!user.memos) {
+      await dispatch(
+        actions.commitAndPush({
+          entityName: "user",
+          //のちにユーザー名に
+          id: "hoge",
+          operation: {
+            $set: {
+              memos: [
+                {
+                  id: 0,
+                  createdAt: 0,
+                  updatedAt: 11111,
+                  title: "Hello",
+                  content: "This is tutorial page",
+                },
+              ],
+            },
+          },
+        })
+      );
+    }
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            page: {
+              name: "Home",
+              index: null,
+            },
+          },
+        },
+      })
+    );
+    navigation.navigate("Home");
   } catch (e) {
     console.log(e);
   }
@@ -71,7 +116,6 @@ const LoginScreen = props => {
         <Button
           onPress={() => {
             props.login({ email: "hoge@example.com", password: "hogehoge" });
-            props.navigation.navigate("Home");
           }}
           title="Login"
         />

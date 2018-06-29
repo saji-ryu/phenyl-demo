@@ -7,7 +7,7 @@ import type {
   ReduxAction,
   MemoData,
   pageData,
-} from "./types";
+} from "../types";
 
 import { actions } from "phenyl-redux/jsnext";
 

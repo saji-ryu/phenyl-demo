@@ -3,12 +3,15 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, Button, Dimensions } from "react-native";
 import { connect } from "react-redux";
 import { pageTo } from "../actions";
+import { actions } from "phenyl-redux";
 
 const memoSelector = state => {
-  return state.memos;
+  return state.phenyl.entities.user.hoge.origin.memos;
+  // let memos = state.phenyl.entities.user.hoge.origin.memos;
+  // return memos;
 };
 const pageSelector = state => {
-  return state.page;
+  return state.phenyl.entities.user.hoge.origin.page;
 };
 
 const mapStateToProps = state => {
@@ -22,14 +25,36 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     navigation: navigation,
     handleEditButton: pageData => {
-      dispatch(pageTo(pageData));
+      dispatch(pageToOperation(pageData));
     },
   };
+};
+
+const pageToOperation = pageData => async (dispatch, getState) => {
+  let phenylId = getState().phenyl.session.id;
+  try {
+    //dispatch(startSubmit());
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            page: pageData,
+          },
+        },
+      })
+    );
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 class MemoViewScreen extends React.Component {
   componentWillMount() {
     console.log(this.props.page.index);
+    console.log(this.props.memos);
     this.props.navigation.setParams({
       toEditPage: () => {
         this.props.handleEditButton({
@@ -37,9 +62,7 @@ class MemoViewScreen extends React.Component {
           index: this.props.page.index,
         });
       },
-      title: this.props.memos[
-        this.props.memos.length - this.props.page.index - 1
-      ].title,
+      title: "あとで治す",
     });
   }
   render() {

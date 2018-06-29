@@ -11,18 +11,28 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { pageTo, createMemo } from "../actions";
+import { actions } from "phenyl-redux";
 
 const screenSize = Dimensions.get("window");
 
-const selector = state => {
-  return state.memos;
+const memoSelector = state => {
+  let memos = state.phenyl.entities.user.hoge.origin.memos;
+  memos.sort((a, b) => {
+    if (a.id > b.id) {
+      return -1;
+    } else {
+      return 1;
+    }
+  });
+  //console.log(memos);
+  return memos;
 };
 const pageSelector = state => {
-  return state.page;
+  return state.phenyl.entities.user.hoge.origin.page;
 };
 const mapStateToProps = state => {
   return {
-    memos: selector(state),
+    memos: memoSelector(state),
     page: pageSelector(state),
   };
 };
@@ -32,27 +42,72 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     navigation: navigation,
     handleNewMemo: id => {
       dispatch(
-        createMemo({
+        createMemoOperation({
           id: id,
           title: "newTitle",
           content: "new Memo",
         })
       );
       dispatch(
-        pageTo({
+        pageToOperation({
           name: "NewMemo",
           index: id,
         })
       );
     },
     handleTitleButton: pageData => {
-      dispatch(pageTo(pageData));
+      dispatch(pageToOperation(pageData));
       navigation.navigate(pageData.name);
     },
     handlePageInfo: pageData => {
-      dispatch(pageTo(pageData));
+      dispatch(pageToOperation(pageData));
     },
   };
+};
+
+const createMemoOperation = memoData => async (dispatch, getState) => {
+  let phenylId = getState().phenyl.session.id;
+  console.log(phenylId);
+  try {
+    //dispatch(startSubmit());
+    memoData.createdAt = await Date.now();
+    memoData.updatedAt = await Date.now();
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $push: {
+            memos: memoData,
+          },
+        },
+      })
+    );
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const pageToOperation = pageData => async (dispatch, getState) => {
+  let phenylId = await getState().phenyl.session.id;
+  try {
+    //dispatch(startSubmit());
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            page: pageData,
+          },
+        },
+      })
+    );
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 class HomeScreen extends React.Component {
@@ -68,7 +123,6 @@ class HomeScreen extends React.Component {
     });
   }
   render() {
-    console.log("here is" + this.props.page.name);
     return (
       <ScrollView>
         <View style={{ flex: 1, flexDirection: "column" }}>
