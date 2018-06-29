@@ -22,42 +22,16 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { navigation } = ownProps;
   return {
-    navigation: navigation,
-    handleSaveButton: (pageData, navigation) => {
-      dispatch(pageToOperation(pageData, navigation));
-    },
-    handleSaveContent: memoData => {
-      dispatch(updateMemoOperation(memoData));
+    handleSave: memoData => {
+      dispatch(updateMemoOperation(memoData, navigation));
     },
   };
 };
 
-const pageToOperation = (pageData, navigation) => async (
+const updateMemoOperation = (memoData, navigation) => async (
   dispatch,
   getState
 ) => {
-  let phenylId = getState().phenyl.session.id;
-  try {
-    //dispatch(startSubmit());
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        //のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            page: pageData,
-          },
-        },
-      })
-    );
-    await navigation.navigate("Home");
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const updateMemoOperation = memoData => async (dispatch, getState) => {
   let phenylId = getState().phenyl.session.id;
   try {
     //dispatch(startSubmit());
@@ -76,6 +50,19 @@ const updateMemoOperation = memoData => async (dispatch, getState) => {
         },
       })
     );
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            page: { name: "Home", id: null },
+          },
+        },
+      })
+    );
+    navigation.navigate("Home");
   } catch (e) {
     console.log(e);
   }
@@ -83,29 +70,14 @@ const updateMemoOperation = memoData => async (dispatch, getState) => {
 
 class NewMemoScreen extends React.Component {
   componentDidMount() {
-    //console.log(this);
     this.props.navigation.setParams({
       toSave: () => {
-        this.props.handleSaveContent({
-          id: this.props.page.index,
-          title: this.props.navigation.state.params.title,
+        this.props.handleSave({
+          id: this.props.page.id,
+          title: this.inputTitle,
           content: this.inputContent,
         });
-        this.props.handleSaveButton(
-          {
-            name: "Home",
-          },
-          this.props.navigation
-        );
       },
-      // saveTitle: titleText => {
-      //   this.props.handleSaveContent({
-      //     id: this.props.page.index,
-      //     title: titleText,
-      //     content: this.inputContent,
-      //   });
-      // },
-      //title: this.props.memo[this.props.page.index].title,
       title: "testあとで変更",
     });
   }
@@ -113,16 +85,16 @@ class NewMemoScreen extends React.Component {
     return (
       <View style={styles.f1acjc}>
         <TextInput
+          style={styles.editMemoTitle}
+          value="title"
+          onChangeText={text => {
+            this.inputTitle = text;
+          }}
+        />
+        <TextInput
           multiline
           style={styles.editMemoContent}
-          //onChangeText={text => this.setState({ text })}
-          value=""
-          // onChangeText={text => {
-          //   this.props.handleSaveContent({
-          //     id: this.props.page.index,
-          //     content: text,
-          //   });
-          // }}
+          value="memo"
           onChangeText={text => {
             this.inputContent = text;
           }}
@@ -133,21 +105,22 @@ class NewMemoScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  editMemoTitle: {
+    marginBottom: 15,
+    fontSize: 20,
+    height: 40,
+    width: screenSize.width - 20,
+    borderColor: "#424242",
+    borderRadius: 5,
+    borderWidth: 1,
+  },
   editMemoContent: {
-    height: screenSize.height - 100,
+    height: screenSize.height - 140,
     width: screenSize.width - 20,
     fontSize: 20,
     borderColor: "#424242",
     borderRadius: 5,
-    borderWidth: 0.5,
-  },
-  editMemoTitle: {
-    height: 30,
-    width: 200,
-    fontSize: 20,
-    borderColor: "#424242",
-    borderRadius: 5,
-    borderWidth: 0.5,
+    borderWidth: 1,
   },
   f1acjc: {
     flex: 1,

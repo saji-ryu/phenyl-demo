@@ -51,7 +51,7 @@ const RootStack = createStackNavigator(
       navigationOptions: ({ navigation }) => {
         return {
           headerTitle: store.getState().phenyl.entities.user.hoge.origin.memos[
-            store.getState().phenyl.entities.user.hoge.origin.page.index
+            store.getState().phenyl.entities.user.hoge.origin.page.id
           ].title,
           headerBackTitle: null,
           headerRight: (
@@ -107,20 +107,11 @@ const RootStack = createStackNavigator(
       screen: NewMemoScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          headerTitle: (
-            <TextInput
-              style={styles.editMemoTitle}
-              value=""
-              onChangeText={text => {
-                navigation.state.params.title = text;
-              }}
-            />
-          ),
+          headerTitle: "新規メモ",
           headerRight: (
             <Button
               onPress={() => {
                 navigation.state.params.toSave();
-                //navigation.navigate("Home");
               }}
               title="Save"
             />

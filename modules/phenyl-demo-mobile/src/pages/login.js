@@ -79,7 +79,7 @@ const loginOperation = ({ email, password }, navigation) => async (
           $set: {
             page: {
               name: "Home",
-              index: null,
+              id: null,
             },
           },
         },

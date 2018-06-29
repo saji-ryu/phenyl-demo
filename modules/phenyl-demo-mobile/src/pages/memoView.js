@@ -53,13 +53,13 @@ const pageToOperation = pageData => async (dispatch, getState) => {
 
 class MemoViewScreen extends React.Component {
   componentWillMount() {
-    console.log(this.props.page.index);
+    console.log(this.props.page.id);
     console.log(this.props.memos);
     this.props.navigation.setParams({
       toEditPage: () => {
         this.props.handleEditButton({
           name: "MemoEdit",
-          index: this.props.page.index,
+          id: this.props.page.id,
         });
       },
       title: "あとで治す",
@@ -70,9 +70,8 @@ class MemoViewScreen extends React.Component {
       <View style={{ flex: 1, margin: 10 }}>
         <Text style={{ fontSize: 20 }}>
           {
-            this.props.memos[
-              this.props.memos.length - this.props.page.index - 1
-            ].content
+            this.props.memos[this.props.memos.length - this.props.page.id - 1]
+              .content
           }
         </Text>
       </View>

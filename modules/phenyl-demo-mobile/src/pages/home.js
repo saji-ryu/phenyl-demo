@@ -42,36 +42,38 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     navigation: navigation,
     handleNewMemo: id => {
       dispatch(
-        createMemoOperation({
-          id: id,
-          title: "newTitle",
-          content: "new Memo",
-        })
-      );
-      dispatch(
-        pageToOperation({
-          name: "NewMemo",
-          index: id,
-        })
+        createMemoOperation(
+          {
+            id: id,
+            title: "newTitle",
+            content: "new Memo",
+          },
+          navigation
+        )
       );
     },
     handleTitleButton: pageData => {
-      dispatch(pageToOperation(pageData));
-      navigation.navigate(pageData.name);
+      dispatch(pageToOperation(pageData, navigation));
+      //navigation.navigate(pageData.name);
     },
-    handlePageInfo: pageData => {
-      dispatch(pageToOperation(pageData));
-    },
+    // handlePageInfo: pageData => {
+    //   dispatch(pageToOperation(pageData, navigation));
+    // },
   };
 };
 
-const createMemoOperation = memoData => async (dispatch, getState) => {
+const createMemoOperation = (memoData, navigation) => async (
+  dispatch,
+  getState
+) => {
   let phenylId = getState().phenyl.session.id;
   console.log(phenylId);
   try {
     //dispatch(startSubmit());
     memoData.createdAt = await Date.now();
     memoData.updatedAt = await Date.now();
+    memoId = await memoSelector(getState()).length;
+    console.log(memoId);
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
@@ -84,12 +86,24 @@ const createMemoOperation = memoData => async (dispatch, getState) => {
         },
       })
     );
+    await dispatch(
+      pageToOperation(
+        {
+          name: "NewMemo",
+          id: memoId,
+        },
+        navigation
+      )
+    );
   } catch (e) {
     console.log(e);
   }
 };
 
-const pageToOperation = pageData => async (dispatch, getState) => {
+const pageToOperation = (pageData, navigation) => async (
+  dispatch,
+  getState
+) => {
   let phenylId = await getState().phenyl.session.id;
   try {
     //dispatch(startSubmit());
@@ -105,6 +119,7 @@ const pageToOperation = pageData => async (dispatch, getState) => {
         },
       })
     );
+    navigation.navigate(pageData.name);
   } catch (e) {
     console.log(e);
   }
@@ -112,10 +127,10 @@ const pageToOperation = pageData => async (dispatch, getState) => {
 
 class HomeScreen extends React.Component {
   componentDidMount() {
-    this.props.handlePageInfo({
-      name: "Home",
-      index: 0,
-    });
+    // this.props.handlePageInfo({
+    //   name: "Home",
+    //   index: null,
+    // });
     this.props.navigation.setParams({
       toNew: () => {
         this.props.handleNewMemo(this.props.memos.length);
@@ -134,7 +149,7 @@ class HomeScreen extends React.Component {
                   console.log(memo.id);
                   this.props.handleTitleButton({
                     name: "MemoView",
-                    index: memo.id,
+                    id: memo.id,
                   });
                 }}
                 style={styles.memoTitle}
