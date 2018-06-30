@@ -19,8 +19,8 @@ const viewMemoSelector = state => {
   //let viewMemos = state.phenyl.entities.user.hoge.origin.memos;
   let sortedMemos;
   if (state.phenyl.entities.user.hoge.origin.memos) {
-    let memos = state.phenyl.entities.user.hoge.origin.memos;
-    sortedMemos = memos.slice().sort((a, b) => {
+    sortedMemos = state.phenyl.entities.user.hoge.origin.memos.slice();
+    sortedMemos.sort((a, b) => {
       if (a.updatedAt > b.updatedAt) {
         return -1;
       } else {
@@ -111,7 +111,6 @@ const createMemoOperation = (memoData, navigation) => async (
     memoData.createdAt = Date.now();
     memoData.updatedAt = Date.now();
     memoId = memoSelector(getState()).length;
-    console.log(memoId);
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
@@ -124,7 +123,6 @@ const createMemoOperation = (memoData, navigation) => async (
         },
       })
     );
-    console.log("memos:" + JSON.stringify(memoSelector(getState())));
     await dispatch(
       pageToOperation(
         {
@@ -185,7 +183,6 @@ class HomeScreen extends React.Component {
   componentDidMount() {
     this.props.navigation.setParams({
       toNew: () => {
-        console.log(this.props.memos.length);
         this.props.handleNewMemo(this.props.memos.length);
       },
       toLogout: () => {
@@ -205,7 +202,6 @@ class HomeScreen extends React.Component {
               <TouchableOpacity
                 //onPress={() => props.handleTitleButton.navigate("MemoView")}
                 onPress={() => {
-                  console.log(memo.id);
                   this.props.handleTitleButton(
                     {
                       name: "MemoView",
