@@ -30,13 +30,15 @@ const loginOperation = ({ email, password }, navigation) => async (
   getState
 ) => {
   try {
-    dispatch(
+    console.log("before error null");
+    await dispatch(
       actions.assign([
         {
           $set: { error: null },
         },
       ])
     );
+    console.log("before user login");
     await dispatch(
       actions.login({
         entityName: "user",
@@ -47,29 +49,26 @@ const loginOperation = ({ email, password }, navigation) => async (
     const user = getState().phenyl.entities.user[session.userId].origin;
     const versionId = getState().phenyl.entities.user[session.userId].versionId;
     //const session = getLoggedInSession(getState());
+    console.log("before follow");
     await dispatch(actions.follow("user", user, versionId));
-    if (!user.memos) {
-      await dispatch(
-        actions.commitAndPush({
-          entityName: "user",
-          //のちにユーザー名に
-          id: "hoge",
-          operation: {
-            $set: {
-              memos: [
-                {
-                  id: 0,
-                  createdAt: 0,
-                  updatedAt: 11111,
-                  title: "Hello",
-                  content: "This is tutorial page",
-                },
-              ],
+    console.log("before set operationMemo");
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            operatingMemo: {
+              content: null,
+              title: null,
+              id: null,
             },
           },
-        })
-      );
-    }
+        },
+      })
+    );
+    console.log("before page chnge");
     await dispatch(
       actions.commitAndPush({
         entityName: "user",

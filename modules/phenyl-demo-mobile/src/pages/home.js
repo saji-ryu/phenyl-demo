@@ -16,14 +16,19 @@ import { actions } from "phenyl-redux";
 const screenSize = Dimensions.get("window");
 
 const memoSelector = state => {
-  let memos = state.phenyl.entities.user.hoge.origin.memos;
-  memos.sort((a, b) => {
-    if (a.id > b.id) {
-      return -1;
-    } else {
-      return 1;
-    }
-  });
+  let memos;
+  if (state.phenyl.entities.user.hoge.origin.memos) {
+    memos = state.phenyl.entities.user.hoge.origin.memos;
+    memos.sort((a, b) => {
+      if (a.updatedAt > b.updatedAt) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+  } else {
+    memos = [];
+  }
   //console.log(memos);
   return memos;
 };
@@ -45,21 +50,48 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         createMemoOperation(
           {
             id: id,
-            title: "newTitle",
+            title: "new Title",
             content: "new Memo",
           },
           navigation
         )
       );
     },
-    handleTitleButton: pageData => {
-      dispatch(pageToOperation(pageData, navigation));
-      //navigation.navigate(pageData.name);
+    handleTitleButton: (pageData, memoData) => {
+      dispatch(pageToOperation(pageData, memoData, navigation));
     },
-    // handlePageInfo: pageData => {
-    //   dispatch(pageToOperation(pageData, navigation));
-    // },
+    handleLogout: pageData => {
+      dispatch(logoutOperation(pageData, navigation));
+    },
   };
+};
+
+const logoutOperation = (pageData, navigation) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    let phenylId = getState().phenyl.session.id;
+    let session = getState().phenyl.session;
+    await dispatch(
+      pageToOperation(
+        pageData,
+        { id: null, title: null, content: null },
+        navigation
+      )
+    );
+    await dispatch(
+      actions.logout({
+        sessionId: session.id,
+        userId: session.userId,
+        entityName: session.entityName,
+      })
+    );
+  } catch (e) {
+    console.log(e);
+  } finally {
+    //await dispatch(actions.reset());
+  }
 };
 
 const createMemoOperation = (memoData, navigation) => async (
@@ -86,10 +118,16 @@ const createMemoOperation = (memoData, navigation) => async (
         },
       })
     );
+    console.log("↑new memo");
     await dispatch(
       pageToOperation(
         {
           name: "NewMemo",
+          id: memoId,
+        },
+        {
+          title: "new Title",
+          content: "new Memo",
           id: memoId,
         },
         navigation
@@ -100,7 +138,7 @@ const createMemoOperation = (memoData, navigation) => async (
   }
 };
 
-const pageToOperation = (pageData, navigation) => async (
+const pageToOperation = (pageData, memoData, navigation) => async (
   dispatch,
   getState
 ) => {
@@ -119,6 +157,18 @@ const pageToOperation = (pageData, navigation) => async (
         },
       })
     );
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            operatingMemo: memoData,
+          },
+        },
+      })
+    );
     navigation.navigate(pageData.name);
   } catch (e) {
     console.log(e);
@@ -127,13 +177,15 @@ const pageToOperation = (pageData, navigation) => async (
 
 class HomeScreen extends React.Component {
   componentDidMount() {
-    // this.props.handlePageInfo({
-    //   name: "Home",
-    //   index: null,
-    // });
     this.props.navigation.setParams({
       toNew: () => {
         this.props.handleNewMemo(this.props.memos.length);
+      },
+      toLogout: () => {
+        this.props.handleLogout({
+          name: "Login",
+          id: null,
+        });
       },
     });
   }
@@ -147,10 +199,13 @@ class HomeScreen extends React.Component {
                 //onPress={() => props.handleTitleButton.navigate("MemoView")}
                 onPress={() => {
                   console.log(memo.id);
-                  this.props.handleTitleButton({
-                    name: "MemoView",
-                    id: memo.id,
-                  });
+                  this.props.handleTitleButton(
+                    {
+                      name: "MemoView",
+                      id: memo.id,
+                    },
+                    { title: memo.title, content: memo.content, id: memo.id }
+                  );
                 }}
                 style={styles.memoTitle}
               >

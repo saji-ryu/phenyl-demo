@@ -6,9 +6,7 @@ import { pageTo } from "../actions";
 import { actions } from "phenyl-redux";
 
 const memoSelector = state => {
-  return state.phenyl.entities.user.hoge.origin.memos;
-  // let memos = state.phenyl.entities.user.hoge.origin.memos;
-  // return memos;
+  return state.phenyl.entities.user.hoge.origin.operatingMemo;
 };
 const pageSelector = state => {
   return state.phenyl.entities.user.hoge.origin.page;
@@ -16,7 +14,7 @@ const pageSelector = state => {
 
 const mapStateToProps = state => {
   return {
-    memos: memoSelector(state),
+    memo: memoSelector(state),
     page: pageSelector(state),
   };
 };
@@ -25,12 +23,47 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     navigation: navigation,
     handleEditButton: pageData => {
-      dispatch(pageToOperation(pageData));
+      dispatch(pageToOperation(pageData, navigation));
+    },
+    handleBackButton: pageData => {
+      dispatch(resetOperatingMemo());
+      dispatch(pageToOperation(pageData, navigation));
     },
   };
 };
 
-const pageToOperation = pageData => async (dispatch, getState) => {
+const resetOperatingMemo = (pageData, navigation) => async (
+  dispatch,
+  getState
+) => {
+  let phenylId = getState().phenyl.session.id;
+  try {
+    //dispatch(startSubmit());
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            operatingMemo: {
+              title: null,
+              id: null,
+              content: null,
+            },
+          },
+        },
+      })
+    );
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const pageToOperation = (pageData, navigation) => async (
+  dispatch,
+  getState
+) => {
   let phenylId = getState().phenyl.session.id;
   try {
     //dispatch(startSubmit());
@@ -46,6 +79,7 @@ const pageToOperation = pageData => async (dispatch, getState) => {
         },
       })
     );
+    navigation.navigate(pageData.name);
   } catch (e) {
     console.log(e);
   }
@@ -53,13 +87,17 @@ const pageToOperation = pageData => async (dispatch, getState) => {
 
 class MemoViewScreen extends React.Component {
   componentWillMount() {
-    console.log(this.props.page.id);
-    console.log(this.props.memos);
     this.props.navigation.setParams({
       toEditPage: () => {
         this.props.handleEditButton({
           name: "MemoEdit",
           id: this.props.page.id,
+        });
+      },
+      toHomePage: () => {
+        this.props.handleBackButton({
+          name: "Home",
+          id: null,
         });
       },
       title: "あとで治す",
@@ -68,12 +106,7 @@ class MemoViewScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, margin: 10 }}>
-        <Text style={{ fontSize: 20 }}>
-          {
-            this.props.memos[this.props.memos.length - this.props.page.id - 1]
-              .content
-          }
-        </Text>
+        <Text style={{ fontSize: 20 }}>{this.props.memo.content}</Text>
       </View>
     );
   }

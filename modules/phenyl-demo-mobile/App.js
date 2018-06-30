@@ -33,7 +33,7 @@ const RootStack = createStackNavigator(
       navigationOptions: ({ navigation, navigationOptions }) => {
         return {
           headerTitle: "UserName",
-          headerBackTitle: null,
+          //headerBackTitle: null,
           headerRight: (
             <Button
               onPress={() => {
@@ -43,6 +43,14 @@ const RootStack = createStackNavigator(
               title="New"
             />
           ),
+          headerLeft: (
+            <Button
+              onPress={() => {
+                navigation.state.params.toLogout();
+              }}
+              title="Logout"
+            />
+          ),
         };
       },
     },
@@ -50,17 +58,23 @@ const RootStack = createStackNavigator(
       screen: MemoViewScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          headerTitle: store.getState().phenyl.entities.user.hoge.origin.memos[
-            store.getState().phenyl.entities.user.hoge.origin.page.id
-          ].title,
+          headerTitle: store.getState().phenyl.entities.user.hoge.origin
+            .operatingMemo.title,
           headerBackTitle: null,
           headerRight: (
             <Button
               onPress={() => {
                 navigation.state.params.toEditPage();
-                navigation.navigate("MemoEdit");
               }}
               title="Edit"
+            />
+          ),
+          headerLeft: (
+            <Button
+              onPress={() => {
+                navigation.state.params.toHomePage();
+              }}
+              title="Home"
             />
           ),
         };
@@ -70,25 +84,21 @@ const RootStack = createStackNavigator(
       screen: MemoEditScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          headerTitle: (
-            <TextInput
-              style={styles.editMemoTitle}
-              value={
-                store.getState().memos[
-                  store.getState().memos.length -
-                    store.getState().page.index -
-                    1
-                ].title
-              }
-              onChangeText={text => {
-                navigation.state.params.updateTitle(text);
-              }}
-            />
-          ),
+          headerTitle: "Edit",
           headerRight: (
             <Button
-              onPress={() => navigation.navigate("MemoView")}
+              onPress={() => {
+                navigation.state.params.toUpdate();
+              }}
               title="Save"
+            />
+          ),
+          headerLeft: (
+            <Button
+              onPress={() => {
+                navigation.state.params.toViewPage();
+              }}
+              title="Back"
             />
           ),
         };
@@ -99,7 +109,6 @@ const RootStack = createStackNavigator(
       navigationOptions: ({ navigation }) => {
         return {
           headerTitle: "Login",
-          headerBackTitle: "Logout",
         };
       },
     },
@@ -114,6 +123,14 @@ const RootStack = createStackNavigator(
                 navigation.state.params.toSave();
               }}
               title="Save"
+            />
+          ),
+          headerLeft: (
+            <Button
+              onPress={() => {
+                navigation.state.params.toHome();
+              }}
+              title="Back"
             />
           ),
         };
@@ -141,7 +158,10 @@ const middlewares = applyMiddleware(
 const store = createStore(reducers, middlewares);
 console.log(store.getState());
 const unsubscribe = store.subscribe(() => {
-  console.log(store.getState());
+  msg = store.getState().phenyl.entities.user
+    ? store.getState().phenyl.entities.user.hoge
+    : store.getState().phenyl;
+  console.log(msg);
 });
 
 export default class App extends React.Component {

@@ -3,19 +3,24 @@ import React, { Component } from "react";
 import { StyleSheet, View, TextInput, Dimensions, Button } from "react-native";
 import { connect } from "react-redux";
 import { pageTo, updateMemo } from "../actions";
+import { page } from "../reducers";
+import { actions } from "phenyl-redux";
 
 const screenSize = Dimensions.get("window");
 
-const selector = state => {
-  return state.memos;
+const memoSelector = state => {
+  return state.phenyl.entities.user.hoge.origin.operatingMemo;
+};
+const memosSelector = state => {
+  return state.phenyl.entities.user.hoge.origin.memos;
 };
 const pageSelector = state => {
-  return state.page;
+  return state.phenyl.entities.user.hoge.origin.page;
 };
 
 const mapStateToProps = state => {
   return {
-    memos: selector(state),
+    memo: memoSelector(state),
     page: pageSelector(state),
   };
 };
@@ -23,50 +28,137 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { navigation } = ownProps;
   return {
     navigation: navigation,
-    handleUpdateButton: pageData => {
-      dispatch(pageTo(pageData));
+    handleUpdateButton: (memoData, pageData) => {
+      dispatch(updateOperation(memoData, pageData, navigation));
     },
-    handleSaveContent: memoData => {
-      dispatch(updateMemo(memoData));
+    handleBackButton: pageData => {
+      dispatch(backOperation(pageData, navigation));
     },
   };
 };
 
+const updateOperation = (memoData, pageData, navigation) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    let phenylId = getState().phenyl.session.id;
+    let memos = await memosSelector(getState());
+    let memoIndex;
+    await memos.map((memo, index) => {
+      if (memo.id == memoData.id) {
+        memoIndex = index;
+      }
+    });
+    let contentKey = "memos[" + memoIndex + "].content";
+    let titleKey = "memos[" + memoIndex + "].title";
+    let updateAtKey = "memos[" + memoIndex + "].updatedAt";
+    let updateTime = Date.now();
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            [contentKey]: memoData.content,
+            [titleKey]: memoData.title,
+            [updateAtKey]: updateTime,
+          },
+        },
+      })
+    );
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            page: pageData,
+          },
+        },
+      })
+    );
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            operatingMemo: memoData,
+          },
+        },
+      })
+    );
+    navigation.navigate("MemoView");
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const backOperation = (pageData, navigation) => async (dispatch, getState) => {
+  let phenylId = getState().phenyl.session.id;
+  try {
+    //dispatch(startSubmit());
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            page: pageData,
+          },
+        },
+      })
+    );
+    navigation.navigate(pageData.name);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 class MemoEditScreen extends React.Component {
   componentWillMount() {
-    console.log(this);
+    this.inputContent = this.props.memo.content;
+    this.inputTitle = this.props.memo.title;
     this.props.navigation.setParams({
       toUpdate: () => {
-        this.props.handleUpdateButton({
+        this.props.handleUpdateButton(
+          {
+            id: this.props.page.id,
+            title: this.inputTitle,
+            content: this.inputContent,
+          },
+          { id: this.props.page.id, name: "MemoView" }
+        );
+      },
+      toViewPage: () => {
+        this.props.handleBackButton({
+          id: this.props.page.id,
           name: "MemoView",
-          index: navigation.state.params.index,
         });
       },
-      updateTitle: titleText => {
-        this.props.handleSaveContent({
-          id: this.props.page.index,
-          title: titleText,
-        });
-      },
-      //title: this.props.memo[this.props.page.index].title,
     });
   }
   render() {
     return (
       <View style={styles.f1acjc}>
         <TextInput
+          style={styles.editMemoTitle}
+          value={this.props.memo.title}
+          onChangeText={text => {
+            this.inputTitle = text;
+          }}
+        />
+        <TextInput
           multiline
           style={styles.editMemoContent}
-          value={
-            this.props.memos[
-              this.props.memos.length - this.props.page.index - 1
-            ].content
-          }
+          value={this.props.memo.content}
           onChangeText={text => {
-            this.props.handleSaveContent({
-              id: this.props.page.index,
-              content: text,
-            });
+            this.inputContent = text;
           }}
         />
       </View>
@@ -75,21 +167,22 @@ class MemoEditScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  editMemoTitle: {
+    marginBottom: 15,
+    fontSize: 20,
+    height: 40,
+    width: screenSize.width - 20,
+    borderColor: "#424242",
+    borderRadius: 5,
+    borderWidth: 1,
+  },
   editMemoContent: {
-    height: screenSize.height - 100,
+    height: screenSize.height - 140,
     width: screenSize.width - 20,
     fontSize: 20,
     borderColor: "#424242",
     borderRadius: 5,
-    borderWidth: 0.5,
-  },
-  editMemoTitle: {
-    height: 30,
-    width: 200,
-    fontSize: 20,
-    borderColor: "#424242",
-    borderRadius: 5,
-    borderWidth: 0.5,
+    borderWidth: 1,
   },
   f1acjc: {
     flex: 1,

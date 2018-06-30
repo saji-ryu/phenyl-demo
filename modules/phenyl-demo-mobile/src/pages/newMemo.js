@@ -7,7 +7,7 @@ import { actions } from "phenyl-redux";
 
 const screenSize = Dimensions.get("window");
 
-const selector = state => {
+const memoSelector = state => {
   return state.phenyl.entities.user.hoge.origin.memos;
 };
 const pageSelector = state => {
@@ -15,7 +15,7 @@ const pageSelector = state => {
 };
 const mapStateToProps = state => {
   return {
-    memo: selector(state),
+    memo: memoSelector(state),
     page: pageSelector(state),
   };
 };
@@ -25,18 +25,63 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     handleSave: memoData => {
       dispatch(updateMemoOperation(memoData, navigation));
     },
+    handleBack: () => {
+      dispatch(backHomeOperation(navigation));
+    },
   };
+};
+
+const backHomeOperation = navigation => async (dispatch, getState) => {
+  try {
+    let phenylId = await getState().phenyl.session.id;
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            page: { name: "Home", id: null },
+          },
+        },
+      })
+    );
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            operatingMemo: { title: null, id: null, content: null },
+          },
+        },
+      })
+    );
+    navigation.navigate("Home");
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 const updateMemoOperation = (memoData, navigation) => async (
   dispatch,
   getState
 ) => {
-  let phenylId = getState().phenyl.session.id;
   try {
+    let phenylId = await getState().phenyl.session.id;
+    let memos = await memoSelector(getState());
+    let memoIndex;
     //dispatch(startSubmit());
-    let contentKey = "memos[" + memoData.id + "].content";
-    let titleKey = "memos[" + memoData.id + "].title";
+    await memos.map((memo, index) => {
+      if (memo.id == memoData.id) {
+        memoIndex = index;
+      }
+    });
+    let contentKey = "memos[" + memoIndex + "].content";
+    let titleKey = "memos[" + memoIndex + "].title";
+    let updateAtKey = "memos[" + memoIndex + "].updatedAt";
+    let updateTime = Date.now();
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
@@ -46,6 +91,7 @@ const updateMemoOperation = (memoData, navigation) => async (
           $set: {
             [contentKey]: memoData.content,
             [titleKey]: memoData.title,
+            [updateAtKey]: updateTime,
           },
         },
       })
@@ -58,6 +104,18 @@ const updateMemoOperation = (memoData, navigation) => async (
         operation: {
           $set: {
             page: { name: "Home", id: null },
+          },
+        },
+      })
+    );
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        //のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            operatingMemo: { title: null, id: null, content: null },
           },
         },
       })
@@ -77,6 +135,9 @@ class NewMemoScreen extends React.Component {
           title: this.inputTitle,
           content: this.inputContent,
         });
+      },
+      toHome: () => {
+        this.props.handleBack();
       },
       title: "testあとで変更",
     });
