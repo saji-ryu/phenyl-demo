@@ -118,7 +118,6 @@ const createMemoOperation = (memoData, navigation) => async (
         },
       })
     );
-    console.log("↑new memo");
     await dispatch(
       pageToOperation(
         {

@@ -38,7 +38,7 @@ const RootStack = createStackNavigator(
             <Button
               onPress={() => {
                 navigation.state.params.toNew();
-                navigation.navigate("NewMemo");
+                //navigation.navigate("NewMemo");
               }}
               title="New"
             />
@@ -159,7 +159,7 @@ const store = createStore(reducers, middlewares);
 console.log(store.getState());
 const unsubscribe = store.subscribe(() => {
   msg = store.getState().phenyl.entities.user
-    ? store.getState().phenyl.entities.user.hoge
+    ? store.getState().phenyl.entities.user
     : store.getState().phenyl;
   console.log(msg);
 });

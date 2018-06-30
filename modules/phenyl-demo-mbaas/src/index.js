@@ -18,6 +18,7 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
   //とりあえずメモリデータベース
   debug("Use memory client");
   const client = createMemoryClient();
+  const time = Date.now();
   const fixtures = {
     user: {
       // <- EntityName
@@ -25,6 +26,15 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
         // <- ID
         email: "hoge@example.com",
         password: "hogehoge",
+        memos: [
+          {
+            id: 0,
+            title: "tutorial",
+            content: "this is first page",
+            createdAt: time,
+            updatedAt: time,
+          },
+        ],
       },
     },
   }; // TODO:後に初期データ投入で使いたくなるはず(by やまたつ)
