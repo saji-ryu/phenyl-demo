@@ -52,22 +52,22 @@ const loginOperation = ({ email, password }, navigation) => async (
     console.log("before follow");
     await dispatch(actions.follow("user", user, versionId));
     console.log("before set operationMemo");
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        //のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            operatingMemo: {
-              content: null,
-              title: null,
-              id: null,
-            },
-          },
-        },
-      })
-    );
+    // await dispatch(
+    //   actions.commitAndPush({
+    //     entityName: "user",
+    //     //のちにユーザー名に
+    //     id: "hoge",
+    //     operation: {
+    //       $set: {
+    //         operatingMemo: {
+    //           content: null,
+    //           title: null,
+    //           id: null,
+    //         },
+    //       },
+    //     },
+    //   })
+    // );
     console.log("before page chnge");
     await dispatch(
       actions.commitAndPush({

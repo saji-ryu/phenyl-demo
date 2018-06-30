@@ -15,11 +15,12 @@ import { actions } from "phenyl-redux";
 
 const screenSize = Dimensions.get("window");
 
-const memoSelector = state => {
-  let memos;
+const viewMemoSelector = state => {
+  //let viewMemos = state.phenyl.entities.user.hoge.origin.memos;
+  let sortedMemos;
   if (state.phenyl.entities.user.hoge.origin.memos) {
-    memos = state.phenyl.entities.user.hoge.origin.memos;
-    memos.sort((a, b) => {
+    let memos = state.phenyl.entities.user.hoge.origin.memos;
+    sortedMemos = memos.slice().sort((a, b) => {
       if (a.updatedAt > b.updatedAt) {
         return -1;
       } else {
@@ -27,17 +28,21 @@ const memoSelector = state => {
       }
     });
   } else {
-    memos = [];
+    sortedMemos = [];
   }
   //console.log(memos);
-  return memos;
+  return sortedMemos;
 };
 const pageSelector = state => {
   return state.phenyl.entities.user.hoge.origin.page;
 };
+const memoSelector = state => {
+  return state.phenyl.entities.user.hoge.origin.memos;
+};
 const mapStateToProps = state => {
   return {
     memos: memoSelector(state),
+    sortedMemos: viewMemoSelector(state),
     page: pageSelector(state),
   };
 };
@@ -46,6 +51,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     navigation: navigation,
     handleNewMemo: id => {
+      console.log(id);
       dispatch(
         createMemoOperation(
           {
@@ -98,13 +104,13 @@ const createMemoOperation = (memoData, navigation) => async (
   dispatch,
   getState
 ) => {
-  let phenylId = getState().phenyl.session.id;
-  console.log(phenylId);
+  //let phenylId = getState().phenyl.session.id;
+  //console.log(phenylId);
   try {
     //dispatch(startSubmit());
-    memoData.createdAt = await Date.now();
-    memoData.updatedAt = await Date.now();
-    memoId = await memoSelector(getState()).length;
+    memoData.createdAt = Date.now();
+    memoData.updatedAt = Date.now();
+    memoId = memoSelector(getState()).length;
     console.log(memoId);
     await dispatch(
       actions.commitAndPush({
@@ -118,6 +124,7 @@ const createMemoOperation = (memoData, navigation) => async (
         },
       })
     );
+    console.log("memos:" + JSON.stringify(memoSelector(getState())));
     await dispatch(
       pageToOperation(
         {
@@ -178,6 +185,7 @@ class HomeScreen extends React.Component {
   componentDidMount() {
     this.props.navigation.setParams({
       toNew: () => {
+        console.log(this.props.memos.length);
         this.props.handleNewMemo(this.props.memos.length);
       },
       toLogout: () => {
@@ -192,7 +200,7 @@ class HomeScreen extends React.Component {
     return (
       <ScrollView>
         <View style={{ flex: 1, flexDirection: "column" }}>
-          {this.props.memos.map(memo => {
+          {this.props.sortedMemos.map(memo => {
             return (
               <TouchableOpacity
                 //onPress={() => props.handleTitleButton.navigate("MemoView")}

@@ -158,7 +158,7 @@ const middlewares = applyMiddleware(
 const store = createStore(reducers, middlewares);
 console.log(store.getState());
 const unsubscribe = store.subscribe(() => {
-  msg = store.getState().phenyl.entities.user
+  let msg = store.getState().phenyl.entities.user
     ? store.getState().phenyl.entities.user
     : store.getState().phenyl;
   console.log(msg);

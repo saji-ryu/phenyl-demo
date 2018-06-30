@@ -72,12 +72,15 @@ const updateMemoOperation = (memoData, navigation) => async (
     let phenylId = await getState().phenyl.session.id;
     let memos = await memoSelector(getState());
     let memoIndex;
+    console.log("memoData.id:" + memoData.id);
     //dispatch(startSubmit());
+    console.log("memos:" + JSON.stringify(memos));
     await memos.map((memo, index) => {
       if (memo.id == memoData.id) {
         memoIndex = index;
       }
     });
+    console.log("memoIndex:" + memoIndex);
     let contentKey = "memos[" + memoIndex + "].content";
     let titleKey = "memos[" + memoIndex + "].title";
     let updateAtKey = "memos[" + memoIndex + "].updatedAt";

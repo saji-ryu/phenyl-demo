@@ -44,16 +44,19 @@ const updateOperation = (memoData, pageData, navigation) => async (
   try {
     let phenylId = getState().phenyl.session.id;
     let memos = await memosSelector(getState());
+    console.log("memos:" + JSON.stringify(memos));
     let memoIndex;
-    await memos.map((memo, index) => {
+    memos.map((memo, index) => {
       if (memo.id == memoData.id) {
         memoIndex = index;
       }
     });
+    console.log(memoIndex);
     let contentKey = "memos[" + memoIndex + "].content";
     let titleKey = "memos[" + memoIndex + "].title";
     let updateAtKey = "memos[" + memoIndex + "].updatedAt";
     let updateTime = Date.now();
+    console.log("before update");
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
@@ -68,6 +71,8 @@ const updateOperation = (memoData, pageData, navigation) => async (
         },
       })
     );
+    await console.log("memos:" + JSON.stringify(memosSelector(getState())));
+    await console.log("before page data");
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
@@ -80,6 +85,7 @@ const updateOperation = (memoData, pageData, navigation) => async (
         },
       })
     );
+    console.log("before operatingmemo");
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
