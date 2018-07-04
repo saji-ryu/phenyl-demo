@@ -12,7 +12,7 @@ import {
   Dimensions,
 } from "react-native";
 
-import { createStore, applyMiddleware, combineReducers } from "redux";
+import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import thunk from "redux-thunk";
 import { Provider, connect } from "react-redux";
 import phenylReducer, { createMiddleware } from "phenyl-redux/jsnext";
@@ -58,8 +58,14 @@ const RootStack = createStackNavigator(
       screen: MemoViewScreen,
       navigationOptions: ({ navigation }) => {
         return {
-          headerTitle: store.getState().phenyl.entities.user.hoge.origin
-            .operatingMemo.title,
+          headerTitle: () => (
+            <Text>
+              {
+                store.getState().phenyl.entities.user.hoge.origin.operatingMemo
+                  .title
+              }
+            </Text>
+          ),
           headerBackTitle: null,
           headerRight: (
             <Button
@@ -148,6 +154,7 @@ const reducers = combineReducers({
   page,
   phenyl: phenylReducer,
 });
+
 const middlewares = applyMiddleware(
   thunk,
   createMiddleware({
@@ -155,7 +162,26 @@ const middlewares = applyMiddleware(
     storeKey: "phenyl",
   })
 );
-const store = createStore(reducers, middlewares);
+//const store = createStore(reducers, middlewares);
+
+const composeEnhancers =
+  typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+        // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+      })
+    : compose;
+
+const enhancer = composeEnhancers(
+  applyMiddleware(
+    thunk,
+    createMiddleware({
+      client: httpClient,
+      storeKey: "phenyl",
+    })
+  )
+);
+const store = createStore(reducers, enhancer);
+
 console.log(store.getState());
 const unsubscribe = store.subscribe(() => {
   let msg = store.getState().phenyl.entities.user

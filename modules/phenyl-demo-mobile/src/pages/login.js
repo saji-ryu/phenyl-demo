@@ -121,6 +121,7 @@ class LoginScreen extends React.Component {
           <TextInput
             style={styles.loginTextInput}
             value=""
+            autoCapitalize="none"
             onChangeText={text => {
               this.userName = text;
               console.log(this.userName);
@@ -132,6 +133,7 @@ class LoginScreen extends React.Component {
           <TextInput
             style={styles.loginTextInput}
             value=""
+            autoCapitalize="none"
             onChangeText={text => {
               this.password = text;
             }}
