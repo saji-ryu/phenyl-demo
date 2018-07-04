@@ -2,13 +2,10 @@
 import React from "react";
 import { StyleSheet, View, TextInput, Dimensions } from "react-native";
 import { connect } from "react-redux";
-import { actions } from "phenyl-redux";
+import { updateOperation } from "../actions";
+import { memosSelector } from "../selectors";
 
 const screenSize = Dimensions.get("window");
-
-const memosSelector = state => {
-  return state.phenyl.entities.user.hoge.origin.memos;
-};
 
 const mapStateToProps = (state, ownProps) => {
   const { navigation } = ownProps;
@@ -25,45 +22,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(updateOperation(memoData, navigation));
     },
   };
-};
-
-const updateOperation = (memoData, navigation) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    let memos = await memosSelector(getState());
-
-    let memoIndex;
-    memos.map((memo, index) => {
-      if (memo.id === memoData.id) {
-        memoIndex = index;
-      }
-    });
-
-    let contentKey = "memos[" + memoIndex + "].content";
-    let titleKey = "memos[" + memoIndex + "].title";
-    let updateAtKey = "memos[" + memoIndex + "].updatedAt";
-    let updateTime = Date.now();
-
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            [contentKey]: memoData.content,
-            [titleKey]: memoData.title,
-            [updateAtKey]: updateTime,
-          },
-        },
-      })
-    );
-    navigation.goBack();
-  } catch (e) {
-    console.log(e);
-  }
 };
 
 class MemoEditScreen extends React.Component {

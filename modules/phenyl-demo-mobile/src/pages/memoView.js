@@ -2,10 +2,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
-
-const memosSelector = state => {
-  return state.phenyl.entities.user.hoge.origin.memos;
-};
+import { memosSelector } from "../selectors";
 
 const mapStateToProps = (state, ownProps) => {
   const { navigation } = ownProps;

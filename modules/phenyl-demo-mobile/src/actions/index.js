@@ -1,84 +1,147 @@
 // @flow
-import type {
-  MemoData_Create,
-  MemoData_Update,
-  MemoData_Delete,
-  UserData,
-  ReduxAction,
-  MemoData,
-  pageData,
-} from "../types";
+import { actions } from "phenyl-redux";
+import { memosSelector } from "../selectors";
 
-import { actions } from "phenyl-redux/jsnext";
+export const loginOperation = ({ email, password }, navigation) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    console.log("before error null");
+    await dispatch(
+      actions.assign([
+        {
+          $set: { error: null },
+        },
+      ])
+    );
+    console.log("before user login");
+    await dispatch(
+      actions.login({
+        entityName: "user",
+        credentials: { email, password },
+      })
+    );
+    console.log("before set operationMemo");
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        // のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            operatingMemo: {
+              content: null,
+              title: null,
+              id: null,
+            },
+          },
+        },
+      })
+    );
+    console.log("before page chnge");
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        // のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            page: {
+              name: "Home",
+              id: null,
+            },
+          },
+        },
+      })
+    );
+    navigation.navigate("Home");
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-//export const ADD_USER = "ADD_USER";
-export const CREATE_MEMO = "CREATE_MEMO";
-export const UPDATE_MEMO = "UPDATE_MEMO";
-export const DELETE_MEMO = "DELETE_MEMO";
+export const logoutOperation = navigation => async (dispatch, getState) => {
+  try {
+    let session = getState().phenyl.session;
+    await dispatch(
+      actions.logout({
+        sessionId: session.id,
+        userId: session.userId,
+        entityName: session.entityName,
+      })
+    );
+    navigation.navigate("Login");
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-export const PAGE_TO = "PAGE_TO";
-//export const SAVE = "SAVE";
+export const createMemoOperation = (memoData, navigation) => async (
+  dispatch,
+  getState
+) => {
+  // let phenylId = getState().phenyl.session.id;
+  // console.log(phenylId);
+  try {
+    // dispatch(startSubmit());
+    memoData.createdAt = Date.now();
+    memoData.updatedAt = Date.now();
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        // のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $push: {
+            memos: memoData,
+          },
+        },
+      })
+    );
 
-// 後で考える
-// export function addUser(userData: UserData) {
-//   return {
-//     type: ADD_USER,
-//     userId: userData.userId,
-//     name: userData.name,
-//     password: userData.password,
-//   };
-// }
+    const memoId = memosSelector(getState()).length - 1;
+    navigation.navigate("MemoEdit", { memoId });
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-type MEMO = {};
-export function createMemo(memoData: MemoData_Create): ReduxAction {
-  let createdAt = Number(Date.now());
-  return {
-    type: CREATE_MEMO,
-    payload: {
-      memo: {
-        id: memoData.id,
-        createdAt: createdAt,
-        updatedAt: createdAt,
-        title: memoData.title,
-        content: memoData.content,
-      },
-    },
-  };
-}
+export const updateOperation = (memoData, navigation) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    let memos = await memosSelector(getState());
 
-export function updateMemo(memoData: MemoData_Update): ReduxAction {
-  let updatedAt = Number(Date.now());
-  let updateData = {
-    type: UPDATE_MEMO,
-    payload: {
-      memo: {
-        id: memoData.id,
-        updatedAt: updatedAt,
-      },
-    },
-  };
-  if (memoData.title) updateData.payload.memo.title = memoData.title;
-  if (memoData.content) updateData.payload.memo.content = memoData.content;
-  return updateData;
-}
+    let memoIndex;
+    memos.map((memo, index) => {
+      if (memo.id === memoData.id) {
+        memoIndex = index;
+      }
+    });
 
-export function deleteMemo(memoData: MemoData_Delete): ReduxAction {
-  return {
-    type: DELETE_MEMO,
-    payload: {
-      memo: {
-        id: memoData.id,
-      },
-    },
-  };
-}
+    let contentKey = "memos[" + memoIndex + "].content";
+    let titleKey = "memos[" + memoIndex + "].title";
+    let updateAtKey = "memos[" + memoIndex + "].updatedAt";
+    let updateTime = Date.now();
 
-export function pageTo(pageData: PgaeData): ReduxAction {
-  return {
-    type: PAGE_TO,
-    payload: {
-      name: pageData.name,
-      index: pageData.index,
-    },
-  };
-}
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        // のちにユーザー名に
+        id: "hoge",
+        operation: {
+          $set: {
+            [contentKey]: memoData.content,
+            [titleKey]: memoData.title,
+            [updateAtKey]: updateTime,
+          },
+        },
+      })
+    );
+    navigation.goBack();
+  } catch (e) {
+    console.log(e);
+  }
+};

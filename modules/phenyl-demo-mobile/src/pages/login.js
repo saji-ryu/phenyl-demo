@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
-import { actions } from "phenyl-redux";
+import { loginOperation } from "../actions";
 
 const screenSize = Dimensions.get("window");
 
@@ -23,65 +23,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(loginOperation(mobileUser, navigation));
     },
   };
-};
-
-const loginOperation = ({ email, password }, navigation) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    console.log("before error null");
-    await dispatch(
-      actions.assign([
-        {
-          $set: { error: null },
-        },
-      ])
-    );
-    console.log("before user login");
-    await dispatch(
-      actions.login({
-        entityName: "user",
-        credentials: { email, password },
-      })
-    );
-    console.log("before set operationMemo");
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            operatingMemo: {
-              content: null,
-              title: null,
-              id: null,
-            },
-          },
-        },
-      })
-    );
-    console.log("before page chnge");
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            page: {
-              name: "Home",
-              id: null,
-            },
-          },
-        },
-      })
-    );
-    navigation.navigate("Home");
-  } catch (e) {
-    console.log(e);
-  }
 };
 
 class LoginScreen extends React.Component {
