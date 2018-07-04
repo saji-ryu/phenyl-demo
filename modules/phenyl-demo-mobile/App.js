@@ -78,7 +78,8 @@ const RootStack = createStackNavigator(
     MemoEdit: {
       screen: MemoEditScreen,
       navigationOptions: ({ navigation }) => {
-        return {
+        return { 
+          // TODO: newの時は変えたいので本当はparamsで渡すのを描画すべき
           headerTitle: "Edit",
           headerRight: (
             <Button
