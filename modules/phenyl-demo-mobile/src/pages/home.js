@@ -7,31 +7,13 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { connect } from "react-redux";
-import { viewMemoSelector, memosSelector } from "../selectors";
-
 import type { Memo } from "../types";
-
-const mapStateToProps = state => {
-  return {
-    memos: memosSelector(state),
-    sortedMemos: viewMemoSelector(state),
-  };
-};
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { navigation } = ownProps;
-  return {
-    handleTitleButton: memoId => {
-      navigation.navigate("MemoView", { memoId });
-    },
-  };
-};
 
 type Props = {
   sortedMemos: Memo[],
   handleTitleButton: Function,
 };
-function HomeScreen(props: Props) {
+const HomeScreen = (props: Props) => {
   const { sortedMemos, handleTitleButton } = props;
   return (
     <ScrollView>
@@ -53,7 +35,9 @@ function HomeScreen(props: Props) {
       </View>
     </ScrollView>
   );
-}
+};
+
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   memoTitle: {
@@ -71,8 +55,3 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
 });
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(HomeScreen);

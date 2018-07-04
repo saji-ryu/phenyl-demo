@@ -1,34 +1,21 @@
 // @flow
 import React from "react";
 import { StyleSheet, View, TextInput, Dimensions } from "react-native";
-import { connect } from "react-redux";
-import { updateOperation } from "../actions";
-import { memosSelector } from "../selectors";
+import type { Memo } from "../types";
 
 const screenSize = Dimensions.get("window");
 
-const mapStateToProps = (state, ownProps) => {
-  const { navigation } = ownProps;
-  const memoId = navigation.getParam("memoId", null);
-  return {
-    memo: memosSelector(state)[memoId],
-  };
-};
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { navigation } = ownProps;
-  return {
-    navigation: navigation,
-    handleUpdateButton: memoData => {
-      dispatch(updateOperation(memoData, navigation));
-    },
-  };
+type Props = {
+  memo: Memo,
+  setNavigationParams: Function,
+  handleUpdateButton: Function,
 };
 
-class MemoEditScreen extends React.Component {
+export default class MemoEditScreen extends React.Component<Props> {
   componentDidMount() {
     this.inputContent = this.props.memo.content;
     this.inputTitle = this.props.memo.title;
-    this.props.navigation.setParams({
+    this.props.setNavigationParams({
       toUpdate: () => {
         this.props.handleUpdateButton({
           id: this.props.memo.id,
@@ -85,8 +72,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MemoEditScreen);

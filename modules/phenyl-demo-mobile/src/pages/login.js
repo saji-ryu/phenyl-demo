@@ -11,7 +11,11 @@ import {
 
 const screenSize = Dimensions.get("window");
 
-export default class LoginScreen extends React.Component {
+type Props = {
+  login: Function,
+};
+
+export default class LoginScreen extends React.Component<Props> {
   render() {
     return (
       <View style={styles.viewStyle}>

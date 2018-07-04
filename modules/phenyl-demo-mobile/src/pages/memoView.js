@@ -1,44 +1,18 @@
 // @flow
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { connect } from "react-redux";
-import { memosSelector } from "../selectors";
 
-const mapStateToProps = (state, ownProps) => {
-  const { navigation } = ownProps;
-  const memoId = navigation.getParam("memoId", null);
-  return {
-    memo: memosSelector(state)[memoId],
-  };
-};
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { navigation } = ownProps;
-  return {
-    navigation: navigation,
-    handleEditButton: () => {
-      navigation.navigate("MemoEdit", {
-        memoId: navigation.getParam("memoId", null),
-      });
-    },
-  };
+import type { Memo } from "../types";
+
+type Props = {
+  memo: Memo,
 };
 
-class MemoViewScreen extends React.Component {
-  componentDidMount() {
-    this.props.navigation.setParams({
-      toEditPage: () => {
-        this.props.handleEditButton();
-      },
-    });
-  }
-  render() {
-    return (
-      <View style={styles.viewStyle}>
-        <Text style={styles.connectText}>{this.props.memo.content}</Text>
-      </View>
-    );
-  }
-}
+const MemoViewScreen = (props: Props) => (
+  <View style={styles.viewStyle}>
+    <Text style={styles.connectText}>{props.memo.content}</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   viewStyle: {
@@ -50,7 +24,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MemoViewScreen);
+export default MemoViewScreen;
