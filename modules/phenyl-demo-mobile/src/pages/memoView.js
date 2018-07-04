@@ -23,9 +23,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         memoId: navigation.getParam("memoId", null),
       });
     },
-    handleBackButton: () => {
-      navigation.navigate("Home");
-    },
   };
 };
 
@@ -35,10 +32,6 @@ class MemoViewScreen extends React.Component {
       toEditPage: () => {
         this.props.handleEditButton();
       },
-      toHomePage: () => {
-        this.props.handleBackButton();
-      },
-      title: "あとで治す",
     });
   }
   render() {

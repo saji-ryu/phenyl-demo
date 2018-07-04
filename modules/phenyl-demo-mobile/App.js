@@ -1,20 +1,11 @@
 // @flow
-import React, { Component } from "react";
+import React from "react";
 import { createStackNavigator } from "react-navigation";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Button,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-} from "react-native";
+import { Text, Button } from "react-native";
 
 import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import thunk from "redux-thunk";
-import { Provider, connect } from "react-redux";
+import { Provider } from "react-redux";
 import phenylReducer, { createMiddleware } from "phenyl-redux/jsnext";
 import PhenylHttpClient from "phenyl-http-client/jsnext";
 
@@ -22,9 +13,6 @@ import LoginScreen from "./src/pages/login";
 import HomeScreen from "./src/pages/home";
 import MemoViewScreen from "./src/pages/memoView";
 import MemoEditScreen from "./src/pages/memoEdit";
-import NewMemoScreen from "./src/pages/newMemo";
-
-import { memos, page } from "./src/reducers/index";
 
 const RootStack = createStackNavigator(
   {
@@ -33,12 +21,12 @@ const RootStack = createStackNavigator(
       navigationOptions: ({ navigation, navigationOptions }) => {
         return {
           headerTitle: "UserName",
-          //headerBackTitle: null,
+          // headerBackTitle: null,
           headerRight: (
             <Button
               onPress={() => {
                 navigation.state.params.toNew();
-                //navigation.navigate("NewMemo");
+                // navigation.navigate("NewMemo");
               }}
               title="New"
             />
@@ -56,6 +44,7 @@ const RootStack = createStackNavigator(
     },
     MemoView: {
       screen: MemoViewScreen,
+      // TODO: idをparamsからとってきて、memoに突っ込む
       navigationOptions: ({ navigation }) => {
         return {
           headerTitle: () => (
@@ -78,7 +67,7 @@ const RootStack = createStackNavigator(
           headerLeft: (
             <Button
               onPress={() => {
-                navigation.state.params.toHomePage();
+                navigation.goBack();
               }}
               title="Home"
             />
@@ -102,7 +91,7 @@ const RootStack = createStackNavigator(
           headerLeft: (
             <Button
               onPress={() => {
-                navigation.state.params.toViewPage();
+                navigation.goBack();
               }}
               title="Back"
             />
@@ -118,30 +107,6 @@ const RootStack = createStackNavigator(
         };
       },
     },
-    NewMemo: {
-      screen: NewMemoScreen,
-      navigationOptions: ({ navigation }) => {
-        return {
-          headerTitle: "新規メモ",
-          headerRight: (
-            <Button
-              onPress={() => {
-                navigation.state.params.toSave();
-              }}
-              title="Save"
-            />
-          ),
-          headerLeft: (
-            <Button
-              onPress={() => {
-                navigation.state.params.toHome();
-              }}
-              title="Back"
-            />
-          ),
-        };
-      },
-    },
   },
   {
     initialRouteName: "Login",
@@ -150,19 +115,8 @@ const RootStack = createStackNavigator(
 
 const httpClient = new PhenylHttpClient({ url: "http://localhost:8888" });
 const reducers = combineReducers({
-  memos,
-  page,
   phenyl: phenylReducer,
 });
-
-const middlewares = applyMiddleware(
-  thunk,
-  createMiddleware({
-    client: httpClient,
-    storeKey: "phenyl",
-  })
-);
-//const store = createStore(reducers, middlewares);
 
 const composeEnhancers =
   typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -182,14 +136,6 @@ const enhancer = composeEnhancers(
 );
 const store = createStore(reducers, enhancer);
 
-console.log(store.getState());
-const unsubscribe = store.subscribe(() => {
-  let msg = store.getState().phenyl.entities.user
-    ? store.getState().phenyl.entities.user
-    : store.getState().phenyl;
-  console.log(msg);
-});
-
 export default class App extends React.Component {
   render() {
     return (
@@ -199,14 +145,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  editMemoTitle: {
-    height: 25,
-    width: 200,
-    fontSize: 20,
-    borderColor: "#424242",
-    borderRadius: 5,
-    borderWidth: 0.5,
-  },
-});

@@ -6,36 +6,28 @@ import { actions } from "phenyl-redux";
 
 const screenSize = Dimensions.get("window");
 
-const memoSelector = state => {
-  return state.phenyl.entities.user.hoge.origin.operatingMemo;
-};
 const memosSelector = state => {
   return state.phenyl.entities.user.hoge.origin.memos;
 };
-const pageSelector = state => {
-  return state.phenyl.entities.user.hoge.origin.page;
-};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  const { navigation } = ownProps;
+  const memoId = navigation.getParam("memoId", null);
   return {
-    memo: memoSelector(state),
-    page: pageSelector(state),
+    memo: memosSelector(state)[memoId],
   };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { navigation } = ownProps;
   return {
     navigation: navigation,
-    handleUpdateButton: (memoData, pageData) => {
-      dispatch(updateOperation(memoData, pageData, navigation));
-    },
-    handleBackButton: pageData => {
-      dispatch(backOperation(pageData, navigation));
+    handleUpdateButton: memoData => {
+      dispatch(updateOperation(memoData, navigation));
     },
   };
 };
 
-const updateOperation = (memoData, pageData, navigation) => async (
+const updateOperation = (memoData, navigation) => async (
   dispatch,
   getState
 ) => {
@@ -68,53 +60,7 @@ const updateOperation = (memoData, pageData, navigation) => async (
         },
       })
     );
-
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            page: pageData,
-          },
-        },
-      })
-    );
-
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            operatingMemo: memoData,
-          },
-        },
-      })
-    );
-    navigation.navigate("MemoView");
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const backOperation = (pageData, navigation) => async (dispatch, getState) => {
-  try {
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            page: pageData,
-          },
-        },
-      })
-    );
-    navigation.navigate(pageData.name);
+    navigation.goBack();
   } catch (e) {
     console.log(e);
   }
@@ -126,19 +72,10 @@ class MemoEditScreen extends React.Component {
     this.inputTitle = this.props.memo.title;
     this.props.navigation.setParams({
       toUpdate: () => {
-        this.props.handleUpdateButton(
-          {
-            id: this.props.page.id,
-            title: this.inputTitle,
-            content: this.inputContent,
-          },
-          { id: this.props.page.id, name: "MemoView" }
-        );
-      },
-      toViewPage: () => {
-        this.props.handleBackButton({
-          id: this.props.page.id,
-          name: "MemoView",
+        this.props.handleUpdateButton({
+          id: this.props.memo.id,
+          title: this.inputTitle,
+          content: this.inputContent,
         });
       },
     });

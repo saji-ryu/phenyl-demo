@@ -106,8 +106,8 @@ const createMemoOperation = (memoData, navigation) => async (
       })
     );
 
-    const memoLength = memoSelector(getState()).length;
-    navigation.navigate("NewMemo", { memoLength });
+    const memoId = memoSelector(getState()).length - 1;
+    navigation.navigate("MemoEdit", { memoId });
   } catch (e) {
     console.log(e);
   }

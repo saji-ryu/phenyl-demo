@@ -28,7 +28,6 @@ const initMemoState = [
 ];
 
 function memos(state = initMemoState, action) {
-  //console.log(action);
   switch (action.type) {
     case CREATE_MEMO:
       return [action.payload.memo, ...state];
