@@ -10,6 +10,8 @@ import {
 import { connect } from "react-redux";
 import { viewMemoSelector, memosSelector } from "../selectors";
 
+import type { Memo } from "../types";
+
 const mapStateToProps = state => {
   return {
     memos: memosSelector(state),
@@ -25,17 +27,22 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-function HomeScreen(props) {
+type Props = {
+  sortedMemos: Memo[],
+  handleTitleButton: Function,
+};
+function HomeScreen(props: Props) {
+  const { sortedMemos, handleTitleButton } = props;
   return (
     <ScrollView>
       <View style={styles.viewStyle}>
-        {props.sortedMemos.map(memo => {
+        {sortedMemos.map(memo => {
           const { id, title } = memo;
           return (
             <TouchableOpacity
               key={id}
               onPress={() => {
-                props.handleTitleButton(id);
+                handleTitleButton(id);
               }}
               style={styles.memoTitle}
             >
