@@ -1,9 +1,7 @@
 // @flow
-import React, { Component } from "react";
-import { StyleSheet, View, TextInput, Dimensions, Button } from "react-native";
+import React from "react";
+import { StyleSheet, View, TextInput, Dimensions } from "react-native";
 import { connect } from "react-redux";
-import { pageTo, updateMemo } from "../actions";
-import { page } from "../reducers";
 import { actions } from "phenyl-redux";
 
 const screenSize = Dimensions.get("window");
@@ -42,12 +40,11 @@ const updateOperation = (memoData, pageData, navigation) => async (
   getState
 ) => {
   try {
-    let phenylId = getState().phenyl.session.id;
     let memos = await memosSelector(getState());
 
     let memoIndex;
     memos.map((memo, index) => {
-      if (memo.id == memoData.id) {
+      if (memo.id === memoData.id) {
         memoIndex = index;
       }
     });
@@ -60,7 +57,7 @@ const updateOperation = (memoData, pageData, navigation) => async (
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -75,7 +72,7 @@ const updateOperation = (memoData, pageData, navigation) => async (
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -88,7 +85,7 @@ const updateOperation = (memoData, pageData, navigation) => async (
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -104,13 +101,11 @@ const updateOperation = (memoData, pageData, navigation) => async (
 };
 
 const backOperation = (pageData, navigation) => async (dispatch, getState) => {
-  let phenylId = getState().phenyl.session.id;
   try {
-    //dispatch(startSubmit());
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -126,7 +121,7 @@ const backOperation = (pageData, navigation) => async (dispatch, getState) => {
 };
 
 class MemoEditScreen extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.inputContent = this.props.memo.content;
     this.inputTitle = this.props.memo.title;
     this.props.navigation.setParams({

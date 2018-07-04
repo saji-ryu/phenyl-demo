@@ -1,8 +1,8 @@
 // @flow
-import React, { Component } from "react";
-import { StyleSheet, View, Button, TextInput, Dimensions } from "react-native";
+import React from "react";
+import { StyleSheet, View, TextInput, Dimensions } from "react-native";
 import { connect } from "react-redux";
-import { pageTo, updateMemo } from "../actions";
+
 import { actions } from "phenyl-redux";
 
 const screenSize = Dimensions.get("window");
@@ -33,11 +33,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 const backHomeOperation = navigation => async (dispatch, getState) => {
   try {
-    let phenylId = await getState().phenyl.session.id;
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -49,7 +48,7 @@ const backHomeOperation = navigation => async (dispatch, getState) => {
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -69,22 +68,21 @@ const updateMemoOperation = (memoData, navigation) => async (
   getState
 ) => {
   try {
-    let phenylId = await getState().phenyl.session.id;
-    let memos = await memoSelector(getState());
+    const memos = await memoSelector(getState());
     let memoIndex;
     await memos.map((memo, index) => {
-      if (memo.id == memoData.id) {
+      if (memo.id === memoData.id) {
         memoIndex = index;
       }
     });
-    let contentKey = "memos[" + memoIndex + "].content";
-    let titleKey = "memos[" + memoIndex + "].title";
-    let updateAtKey = "memos[" + memoIndex + "].updatedAt";
-    let updateTime = Date.now();
+    const contentKey = "memos[" + memoIndex + "].content";
+    const titleKey = "memos[" + memoIndex + "].title";
+    const updateAtKey = "memos[" + memoIndex + "].updatedAt";
+    const updateTime = Date.now();
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -98,7 +96,7 @@ const updateMemoOperation = (memoData, navigation) => async (
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -110,7 +108,7 @@ const updateMemoOperation = (memoData, navigation) => async (
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {

@@ -1,8 +1,7 @@
 // @flow
-import React, { Component } from "react";
-import { StyleSheet, Text, View, Button, Dimensions } from "react-native";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
-import { pageTo } from "../actions";
 import { actions } from "phenyl-redux";
 
 const memoSelector = state => {
@@ -36,13 +35,12 @@ const resetOperatingMemo = (pageData, navigation) => async (
   dispatch,
   getState
 ) => {
-  let phenylId = getState().phenyl.session.id;
   try {
-    //dispatch(startSubmit());
+    // dispatch(startSubmit());
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -64,13 +62,12 @@ const pageToOperation = (pageData, navigation) => async (
   dispatch,
   getState
 ) => {
-  let phenylId = getState().phenyl.session.id;
   try {
-    //dispatch(startSubmit());
+    // dispatch(startSubmit());
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -86,7 +83,7 @@ const pageToOperation = (pageData, navigation) => async (
 };
 
 class MemoViewScreen extends React.Component {
-  componentWillMount() {
+  componentDidlMount() {
     this.props.navigation.setParams({
       toEditPage: () => {
         this.props.handleEditButton({
@@ -105,12 +102,22 @@ class MemoViewScreen extends React.Component {
   }
   render() {
     return (
-      <View style={{ flex: 1, margin: 10 }}>
-        <Text style={{ fontSize: 20 }}>{this.props.memo.content}</Text>
+      <View style={styles.viewStyle}>
+        <Text style={styles.connectText}>{this.props.memo.content}</Text>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  viewStyle: {
+    flex: 1,
+    margin: 10,
+  },
+  connectText: {
+    fontSize: 20,
+  },
+});
 
 export default connect(
   mapStateToProps,
