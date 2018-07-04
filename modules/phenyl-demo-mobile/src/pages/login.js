@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -45,29 +45,11 @@ const loginOperation = ({ email, password }, navigation) => async (
         credentials: { email, password },
       })
     );
-    if (phenylError) {
-      switch (phenylError.type) {
-        case "NetworkFailed": {
-          console.log("networkError");
-          return;
-        }
-        case "Unauthorized": {
-          console.log("unauthorized");
-          return;
-        }
-        default:
-          throw createError(phenylError);
-      }
-    }
-    const session = getState().phenyl.session;
-    const user = getState().phenyl.entities.user[session.userId].origin;
-    const versionId = getState().phenyl.entities.user[session.userId].versionId;
-    const phenylError = getState().phenyl.error;
     console.log("before set operationMemo");
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -84,7 +66,7 @@ const loginOperation = ({ email, password }, navigation) => async (
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -105,19 +87,12 @@ const loginOperation = ({ email, password }, navigation) => async (
 class LoginScreen extends React.Component {
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          margin: 10,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <View style={styles.viewStyle}>
         <View style={styles.f1acjc}>
-          <Text style={{ fontSize: 40 }}>MEMO</Text>
+          <Text style={styles.titleText}>MEMO</Text>
         </View>
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text style={{ fontSize: 30, marginBottom: 10 }}>UserName</Text>
+        <View style={styles.f1jc}>
+          <Text style={styles.contentText}>UserName</Text>
           <TextInput
             style={styles.loginTextInput}
             value=""
@@ -128,8 +103,8 @@ class LoginScreen extends React.Component {
             }}
           />
         </View>
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text style={{ fontSize: 30, marginBottom: 10 }}>PassWord</Text>
+        <View style={styles.f1jc}>
+          <Text style={styles.contentText}>PassWord</Text>
           <TextInput
             style={styles.loginTextInput}
             value=""
@@ -142,7 +117,6 @@ class LoginScreen extends React.Component {
         <View style={styles.f1acjc}>
           <Button
             onPress={() => {
-              // this.props.login({ email: "hoge@example.com", password: "hogehoge" });
               this.props.login({
                 email: this.userName,
                 password: this.password,
@@ -170,6 +144,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  f1jc: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  viewStyle: {
+    flex: 1,
+    margin: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  titleText: { fontSize: 40 },
+  contentText: { fontSize: 30, marginBottom: 10 },
 });
 
 export default connect(
