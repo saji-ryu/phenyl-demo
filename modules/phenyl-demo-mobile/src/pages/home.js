@@ -1,22 +1,17 @@
 // @flow
-import React, { Component } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import { connect } from "react-redux";
-import { pageTo, createMemo } from "../actions";
 import { actions } from "phenyl-redux";
 
-const screenSize = Dimensions.get("window");
-
 const viewMemoSelector = state => {
-  //let viewMemos = state.phenyl.entities.user.hoge.origin.memos;
+  // let viewMemos = state.phenyl.entities.user.hoge.origin.memos;
   let sortedMemos;
   if (state.phenyl.entities.user.hoge.origin.memos) {
     sortedMemos = state.phenyl.entities.user.hoge.origin.memos.slice();
@@ -30,7 +25,7 @@ const viewMemoSelector = state => {
   } else {
     sortedMemos = [];
   }
-  //console.log(memos);
+  // console.log(memos);
   return sortedMemos;
 };
 const pageSelector = state => {
@@ -77,7 +72,6 @@ const logoutOperation = (pageData, navigation) => async (
   getState
 ) => {
   try {
-    let phenylId = getState().phenyl.session.id;
     let session = getState().phenyl.session;
     await dispatch(
       pageToOperation(
@@ -96,7 +90,7 @@ const logoutOperation = (pageData, navigation) => async (
   } catch (e) {
     console.log(e);
   } finally {
-    //await dispatch(actions.reset());
+    // await dispatch(actions.reset());
   }
 };
 
@@ -104,17 +98,17 @@ const createMemoOperation = (memoData, navigation) => async (
   dispatch,
   getState
 ) => {
-  //let phenylId = getState().phenyl.session.id;
-  //console.log(phenylId);
+  // let phenylId = getState().phenyl.session.id;
+  // console.log(phenylId);
   try {
-    //dispatch(startSubmit());
+    // dispatch(startSubmit());
     memoData.createdAt = Date.now();
     memoData.updatedAt = Date.now();
-    memoId = memoSelector(getState()).length;
+    let memoId = memoSelector(getState()).length;
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $push: {
@@ -146,13 +140,11 @@ const pageToOperation = (pageData, memoData, navigation) => async (
   dispatch,
   getState
 ) => {
-  let phenylId = await getState().phenyl.session.id;
   try {
-    //dispatch(startSubmit());
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -164,7 +156,7 @@ const pageToOperation = (pageData, memoData, navigation) => async (
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        //のちにユーザー名に
+        // のちにユーザー名に
         id: "hoge",
         operation: {
           $set: {
@@ -196,11 +188,11 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <ScrollView>
-        <View style={{ flex: 1, flexDirection: "column" }}>
+        <View style={styles.viewStyle}>
           {this.props.sortedMemos.map(memo => {
             return (
               <TouchableOpacity
-                //onPress={() => props.handleTitleButton.navigate("MemoView")}
+                key={memo.id}
                 onPress={() => {
                   this.props.handleTitleButton(
                     {
@@ -212,7 +204,7 @@ class HomeScreen extends React.Component {
                 }}
                 style={styles.memoTitle}
               >
-                <Text style={{ margin: 10, fontSize: 25 }}>{memo.title}</Text>
+                <Text style={styles.memoTitleText}>{memo.title}</Text>
               </TouchableOpacity>
             );
           })}
@@ -229,10 +221,13 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: "#adadad",
   },
-  f1acjc: {
+  viewStyle: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: "column",
+  },
+  memoTitleText: {
+    margin: 10,
+    fontSize: 25,
   },
 });
 
