@@ -95,7 +95,7 @@ class LoginScreen extends React.Component {
           <Text style={styles.contentText}>UserName</Text>
           <TextInput
             style={styles.loginTextInput}
-            value=""
+            value="hoge@example.com" // FIXME:パーシスト入れたら消す
             autoCapitalize="none"
             onChangeText={text => {
               this.userName = text;
@@ -107,7 +107,7 @@ class LoginScreen extends React.Component {
           <Text style={styles.contentText}>PassWord</Text>
           <TextInput
             style={styles.loginTextInput}
-            value=""
+            value="hogehoge" // FIXME:パーシスト入れたら消す
             autoCapitalize="none"
             onChangeText={text => {
               this.password = text;
