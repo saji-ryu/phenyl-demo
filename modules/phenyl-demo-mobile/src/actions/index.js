@@ -77,16 +77,21 @@ export const logoutOperation = navigation => async (dispatch, getState) => {
   }
 };
 
-export const createMemoOperation = (memoData, navigation) => async (
-  dispatch,
-  getState
-) => {
+export const createMemoOperation = navigation => async (dispatch, getState) => {
   // let phenylId = getState().phenyl.session.id;
   // console.log(phenylId);
   try {
     // dispatch(startSubmit());
-    memoData.createdAt = Date.now();
-    memoData.updatedAt = Date.now();
+    const memoId = memosSelector(getState()).length;
+    const timeStamp = Date.now();
+    const memoData = {
+      id: memoId,
+      title: "new Title",
+      content: "new Memo",
+      createdAt: timeStamp,
+      updatedAt: timeStamp,
+    };
+
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
@@ -100,7 +105,6 @@ export const createMemoOperation = (memoData, navigation) => async (
       })
     );
 
-    const memoId = memosSelector(getState()).length - 1;
     navigation.navigate("MemoEdit", { memoId });
   } catch (e) {
     console.log(e);

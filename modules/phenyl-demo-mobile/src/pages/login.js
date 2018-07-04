@@ -8,24 +8,10 @@ import {
   TextInput,
   Dimensions,
 } from "react-native";
-import { connect } from "react-redux";
-import { loginOperation } from "../actions";
 
 const screenSize = Dimensions.get("window");
 
-const mapStateToProps = state => {
-  return {};
-};
-const mapDispatchToProps = (dispatch, ownProps) => {
-  const { navigation } = ownProps;
-  return {
-    login: mobileUser => {
-      dispatch(loginOperation(mobileUser, navigation));
-    },
-  };
-};
-
-class LoginScreen extends React.Component {
+export default class LoginScreen extends React.Component {
   render() {
     return (
       <View style={styles.viewStyle}>
@@ -98,8 +84,3 @@ const styles = StyleSheet.create({
   titleText: { fontSize: 40 },
   contentText: { fontSize: 30, marginBottom: 10 },
 });
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginScreen);

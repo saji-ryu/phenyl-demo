@@ -8,7 +8,6 @@ import {
   ScrollView,
 } from "react-native";
 import { connect } from "react-redux";
-import { createMemoOperation, logoutOperation } from "../actions";
 import { viewMemoSelector, memosSelector } from "../selectors";
 
 const mapStateToProps = state => {
@@ -20,65 +19,33 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { navigation } = ownProps;
   return {
-    navigation: navigation,
-    handleNewMemo: id => {
-      console.log(id);
-      dispatch(
-        createMemoOperation(
-          {
-            id: id,
-            title: "new Title",
-            content: "new Memo",
-          },
-          navigation
-        )
-      );
-    },
     handleTitleButton: memoId => {
       navigation.navigate("MemoView", { memoId });
-    },
-    handleLogout: () => {
-      dispatch(logoutOperation(navigation));
     },
   };
 };
 
-class HomeScreen extends React.Component {
-  componentDidMount() {
-    this.props.navigation.setParams({
-      toNew: () => {
-        this.props.handleNewMemo(this.props.memos.length);
-      },
-      toLogout: () => {
-        this.props.handleLogout({
-          name: "Login",
-          id: null,
-        });
-      },
-    });
-  }
-  render() {
-    return (
-      <ScrollView>
-        <View style={styles.viewStyle}>
-          {this.props.sortedMemos.map(memo => {
-            const { id, title } = memo;
-            return (
-              <TouchableOpacity
-                key={id}
-                onPress={() => {
-                  this.props.handleTitleButton(id);
-                }}
-                style={styles.memoTitle}
-              >
-                <Text style={styles.memoTitleText}>{title}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </ScrollView>
-    );
-  }
+function HomeScreen(props) {
+  return (
+    <ScrollView>
+      <View style={styles.viewStyle}>
+        {props.sortedMemos.map(memo => {
+          const { id, title } = memo;
+          return (
+            <TouchableOpacity
+              key={id}
+              onPress={() => {
+                props.handleTitleButton(id);
+              }}
+              style={styles.memoTitle}
+            >
+              <Text style={styles.memoTitleText}>{title}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -9,10 +9,11 @@ import { Provider } from "react-redux";
 import phenylReducer, { createMiddleware } from "phenyl-redux/jsnext";
 import PhenylHttpClient from "phenyl-http-client/jsnext";
 
-import LoginScreen from "./src/pages/login";
+import LoginScreen from "./src/pages/login.container";
 import HomeScreen from "./src/pages/home";
 import MemoViewScreen from "./src/pages/memoView";
 import MemoEditScreen from "./src/pages/memoEdit";
+import { createMemoOperation, logoutOperation } from "./src/actions";
 
 const RootStack = createStackNavigator(
   {
@@ -25,8 +26,7 @@ const RootStack = createStackNavigator(
           headerRight: (
             <Button
               onPress={() => {
-                navigation.state.params.toNew();
-                // navigation.navigate("NewMemo");
+                store.dispatch(createMemoOperation(navigation));
               }}
               title="New"
             />
@@ -34,7 +34,7 @@ const RootStack = createStackNavigator(
           headerLeft: (
             <Button
               onPress={() => {
-                navigation.state.params.toLogout();
+                store.dispatch(logoutOperation(navigation));
               }}
               title="Logout"
             />
@@ -78,7 +78,7 @@ const RootStack = createStackNavigator(
     MemoEdit: {
       screen: MemoEditScreen,
       navigationOptions: ({ navigation }) => {
-        return { 
+        return {
           // TODO: newの時は変えたいので本当はparamsで渡すのを描画すべき
           headerTitle: "Edit",
           headerRight: (
