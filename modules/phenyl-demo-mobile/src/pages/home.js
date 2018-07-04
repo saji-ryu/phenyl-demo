@@ -58,28 +58,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         )
       );
     },
-    handleTitleButton: (pageData, memoData) => {
-      dispatch(pageToOperation(pageData, memoData, navigation));
+    handleTitleButton: memoId => {
+      navigation.navigate("MemoView", { memoId });
     },
-    handleLogout: pageData => {
-      dispatch(logoutOperation(pageData, navigation));
+    handleLogout: () => {
+      dispatch(logoutOperation(navigation));
     },
   };
 };
 
-const logoutOperation = (pageData, navigation) => async (
-  dispatch,
-  getState
-) => {
+const logoutOperation = navigation => async (dispatch, getState) => {
   try {
     let session = getState().phenyl.session;
-    await dispatch(
-      pageToOperation(
-        pageData,
-        { id: null, title: null, content: null },
-        navigation
-      )
-    );
     await dispatch(
       actions.logout({
         sessionId: session.id,
@@ -87,10 +77,9 @@ const logoutOperation = (pageData, navigation) => async (
         entityName: session.entityName,
       })
     );
+    navigation.navigate("Login");
   } catch (e) {
     console.log(e);
-  } finally {
-    // await dispatch(actions.reset());
   }
 };
 
@@ -104,7 +93,6 @@ const createMemoOperation = (memoData, navigation) => async (
     // dispatch(startSubmit());
     memoData.createdAt = Date.now();
     memoData.updatedAt = Date.now();
-    let memoId = memoSelector(getState()).length;
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
@@ -117,55 +105,9 @@ const createMemoOperation = (memoData, navigation) => async (
         },
       })
     );
-    await dispatch(
-      pageToOperation(
-        {
-          name: "NewMemo",
-          id: memoId,
-        },
-        {
-          title: "new Title",
-          content: "new Memo",
-          id: memoId,
-        },
-        navigation
-      )
-    );
-  } catch (e) {
-    console.log(e);
-  }
-};
 
-const pageToOperation = (pageData, memoData, navigation) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            page: pageData,
-          },
-        },
-      })
-    );
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            operatingMemo: memoData,
-          },
-        },
-      })
-    );
-    navigation.navigate(pageData.name);
+    const memoLength = memoSelector(getState()).length;
+    navigation.navigate("NewMemo", { memoLength });
   } catch (e) {
     console.log(e);
   }
@@ -190,21 +132,16 @@ class HomeScreen extends React.Component {
       <ScrollView>
         <View style={styles.viewStyle}>
           {this.props.sortedMemos.map(memo => {
+            const { id, title } = memo;
             return (
               <TouchableOpacity
-                key={memo.id}
+                key={id}
                 onPress={() => {
-                  this.props.handleTitleButton(
-                    {
-                      name: "MemoView",
-                      id: memo.id,
-                    },
-                    { title: memo.title, content: memo.content, id: memo.id }
-                  );
+                  this.props.handleTitleButton(id);
                 }}
                 style={styles.memoTitle}
               >
-                <Text style={styles.memoTitleText}>{memo.title}</Text>
+                <Text style={styles.memoTitleText}>{title}</Text>
               </TouchableOpacity>
             );
           })}
