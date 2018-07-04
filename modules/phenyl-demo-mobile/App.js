@@ -10,9 +10,9 @@ import phenylReducer, { createMiddleware } from "phenyl-redux/jsnext";
 import PhenylHttpClient from "phenyl-http-client/jsnext";
 
 import LoginScreen from "./src/pages/login.container";
-import HomeScreen from "./src/pages/home";
-import MemoViewScreen from "./src/pages/memoView";
-import MemoEditScreen from "./src/pages/memoEdit";
+import HomeScreen from "./src/pages/home.container";
+import MemoViewScreen from "./src/pages/memoView.container";
+import MemoEditScreen from "./src/pages/memoEdit.container";
 import { createMemoOperation, logoutOperation } from "./src/actions";
 
 const RootStack = createStackNavigator(
@@ -59,7 +59,9 @@ const RootStack = createStackNavigator(
           headerRight: (
             <Button
               onPress={() => {
-                navigation.state.params.toEditPage();
+                navigation.navigate("MemoEdit", {
+                  memoId: navigation.getParam("memoId", null),
+                });
               }}
               title="Edit"
             />
