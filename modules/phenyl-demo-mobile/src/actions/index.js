@@ -1,13 +1,13 @@
 // @flow
 import { actions } from "phenyl-redux";
 import { memosSelector } from "../selectors";
+import navigationService from "../../NavigationService";
 
 export const loginOperation = ({ email, password }, navigation) => async (
   dispatch,
   getState
 ) => {
   try {
-    console.log("before error null");
     await dispatch(
       actions.assign([
         {
@@ -15,47 +15,15 @@ export const loginOperation = ({ email, password }, navigation) => async (
         },
       ])
     );
-    console.log("before user login");
+
     await dispatch(
       actions.login({
         entityName: "user",
         credentials: { email, password },
       })
     );
-    console.log("before set operationMemo");
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            operatingMemo: {
-              content: null,
-              title: null,
-              id: null,
-            },
-          },
-        },
-      })
-    );
-    console.log("before page chnge");
-    await dispatch(
-      actions.commitAndPush({
-        entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
-        operation: {
-          $set: {
-            page: {
-              name: "Home",
-              id: null,
-            },
-          },
-        },
-      })
-    );
-    navigation.navigate("Home");
+    dispatch({ type: "LOGIN_SUCCESS" });
+    // navigationService.navigate({ routeName: "Home" });
   } catch (e) {
     console.log(e);
   }

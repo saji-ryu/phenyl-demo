@@ -15,6 +15,8 @@ import MemoViewScreen from "./src/pages/memoView.container";
 import MemoEditScreen from "./src/pages/memoEdit.container";
 import { createMemoOperation, logoutOperation } from "./src/actions";
 
+import NavigationService from "./NavigationService";
+
 const RootStack = createStackNavigator(
   {
     Home: {
@@ -47,14 +49,7 @@ const RootStack = createStackNavigator(
       // TODO: idをparamsからとってきて、memoに突っ込む
       navigationOptions: ({ navigation }) => {
         return {
-          headerTitle: () => (
-            <Text>
-              {
-                store.getState().phenyl.entities.user.hoge.origin.operatingMemo
-                  .title
-              }
-            </Text>
-          ),
+          headerTitle: () => <Text>あああ</Text>,
           headerBackTitle: null,
           headerRight: (
             <Button
@@ -120,6 +115,19 @@ const httpClient = new PhenylHttpClient({ url: "http://localhost:8888" });
 const reducers = combineReducers({
   phenyl: phenylReducer,
 });
+const mapActionToNavParams = action => {
+  switch (action.type) {
+    case "LOGIN_SUCCESS":
+      return ["Home"];
+  }
+  return null;
+};
+
+const navigationMiddleware = store => next => action => {
+  const navParams = mapActionToNavParams(action);
+  navParams && NavigationService.navigate(...navParams);
+  return next(action);
+};
 
 const composeEnhancers =
   typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -131,6 +139,7 @@ const composeEnhancers =
 const enhancer = composeEnhancers(
   applyMiddleware(
     thunk,
+    navigationMiddleware,
     createMiddleware({
       client: httpClient,
       storeKey: "phenyl",
@@ -143,7 +152,11 @@ export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <RootStack />
+        <RootStack
+          ref={navigatorRef => {
+            NavigationService.setTopLevelNavigator(navigatorRef);
+          }}
+        />
       </Provider>
     );
   }
