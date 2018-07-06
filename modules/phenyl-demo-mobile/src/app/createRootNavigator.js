@@ -2,23 +2,28 @@
 // createStackNavigator使う処理を分離
 import React from "react";
 import { createStackNavigator } from "react-navigation";
-import { Text, Button } from "react-native";
+import { Text, Button, StyleSheet } from "react-native";
 
 import LoginScreen from "../pages/login.container";
 import HomeScreen from "../pages/home.container";
 import MemoViewScreen from "../pages/memoView.container";
 import MemoEditScreen from "../pages/memoEdit.container";
 import { createMemoOperation, logoutOperation } from "../actions";
-import { memosSelector } from "../selectors";
+import { memosSelector, sessionSelector } from "../selectors";
 
 const createRootNavigator = store => {
   return createStackNavigator(
     {
       Home: {
         screen: HomeScreen,
-        navigationOptions: ({ navigation }) => {
+        navigationOptions: () => {
           return {
-            headerTitle: "UserName",
+            // headerTitle: "UserName",
+            headerTitle: () => (
+              <Text style={styles.headerTitle}>
+                {sessionSelector(store.getState()).userId}のメモ
+              </Text>
+            ),
             // headerBackTitle: null,
             headerRight: (
               <Button
@@ -45,7 +50,7 @@ const createRootNavigator = store => {
         navigationOptions: ({ navigation }) => {
           return {
             headerTitle: () => (
-              <Text>
+              <Text style={styles.headerTitle}>
                 {
                   memosSelector(store.getState())[
                     navigation.getParam("memoId", null)
@@ -81,8 +86,11 @@ const createRootNavigator = store => {
         screen: MemoEditScreen,
         navigationOptions: ({ navigation }) => {
           return {
-            // TODO: newの時は変えたいので本当はparamsで渡すのを描画すべき
-            headerTitle: "Edit",
+            headerTitle: () => (
+              <Text style={styles.headerTitle}>
+                {navigation.getParam("pageTitle", null)}
+              </Text>
+            ),
             headerRight: (
               <Button
                 onPress={() => {
@@ -116,5 +124,13 @@ const createRootNavigator = store => {
     }
   );
 };
+
+const styles = StyleSheet.create({
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: "700",
+  },
+});
+
 /* createStackNavigatorつかってRootNavigator返す */
 export default createRootNavigator;

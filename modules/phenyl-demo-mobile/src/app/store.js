@@ -19,9 +19,9 @@ const mapActionToNavParams = action => {
       return ["MemoView", { memoId: action.memoId }];
     // editの場合memoIdを取ってくる時にnavigtionに依存している
     case "MEMO_EDIT_SELECTED":
-      return ["MemoEdit", { memoId: action.memoId }];
+      return ["MemoEdit", { memoId: action.memoId, pageTitle: "Edit" }];
     case "MEMO_CREATED":
-      return ["MemoEdit", { memoId: action.memoId }];
+      return ["MemoEdit", { memoId: action.memoId, pageTitle: "New" }];
     case "PAGE_BACK":
       return ["Back"];
   }

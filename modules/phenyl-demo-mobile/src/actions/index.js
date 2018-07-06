@@ -1,9 +1,8 @@
 // @flow
 import { actions } from "phenyl-redux";
 import { memosSelector, sessionSelector } from "../selectors";
-// import navigationService from "../../NavigationService";
 
-export const loginOperation = ({ email, password }, navigation) => async (
+export const loginOperation = ({ email, password }) => async (
   dispatch,
   getState
 ) => {
@@ -22,17 +21,22 @@ export const loginOperation = ({ email, password }, navigation) => async (
         credentials: { email, password },
       })
     );
-    console.log("login successs");
-    dispatch({ type: "LOGIN_SUCCESS" });
-    // navigationService.navigate({ routeName: "Home" });
+    const phenylError = await getState().phenyl.error;
+    if (phenylError) {
+      console.log("no match user");
+    } else {
+      dispatch({ type: "LOGIN_SUCCESS" });
+    }
+    // console.log("login successs");
   } catch (e) {
     console.log(e);
   }
 };
 
-export const logoutOperation = navigation => async (dispatch, getState) => {
+export const logoutOperation = () => async (dispatch, getState) => {
   try {
     let session = getState().phenyl.session;
+    await dispatch({ type: "PAGE_BACK" });
     await dispatch(
       actions.logout({
         sessionId: session.id,
@@ -40,17 +44,13 @@ export const logoutOperation = navigation => async (dispatch, getState) => {
         entityName: session.entityName,
       })
     );
-    dispatch({ type: "PAGE_BACK" });
   } catch (e) {
     console.log(e);
   }
 };
 
 export const createMemoOperation = () => async (dispatch, getState) => {
-  // let phenylId = getState().phenyl.session.id;
-  // console.log(phenylId);
   try {
-    // dispatch(startSubmit());
     const memoId = memosSelector(getState()).length;
     const timeStamp = Date.now();
     const memoData = {

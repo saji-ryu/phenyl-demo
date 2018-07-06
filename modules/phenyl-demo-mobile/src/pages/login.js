@@ -30,7 +30,6 @@ export default class LoginScreen extends React.Component<Props> {
             autoCapitalize="none"
             onChangeText={text => {
               this.userName = text;
-              console.log(this.userName);
             }}
           />
         </View>

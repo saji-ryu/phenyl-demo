@@ -7,10 +7,10 @@ const mapStateToProps = state => {
   return {};
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { navigation } = ownProps;
+  // const { navigation } = ownProps;
   return {
     login: mobileUser => {
-      dispatch(loginOperation(mobileUser, navigation));
+      dispatch(loginOperation(mobileUser));
     },
   };
 };
