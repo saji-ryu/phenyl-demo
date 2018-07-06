@@ -46,7 +46,6 @@ const createRootNavigator = store => {
       },
       MemoView: {
         screen: MemoViewScreen,
-        // TODO: idをparamsからとってきて、memoに突っ込む
         navigationOptions: ({ navigation }) => {
           return {
             headerTitle: () => (
