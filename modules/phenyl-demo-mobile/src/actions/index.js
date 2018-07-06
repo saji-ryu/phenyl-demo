@@ -79,10 +79,7 @@ export const createMemoOperation = () => async (dispatch, getState) => {
   }
 };
 
-export const updateOperation = (memoData, navigation) => async (
-  dispatch,
-  getState
-) => {
+export const updateOperation = memoData => async (dispatch, getState) => {
   try {
     let memos = await memosSelector(getState());
 

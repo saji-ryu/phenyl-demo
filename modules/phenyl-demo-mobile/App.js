@@ -22,7 +22,7 @@ const RootStack = createStackNavigator(
   {
     Home: {
       screen: HomeScreen,
-      navigationOptions: ({ navigation, navigationOptions }) => {
+      navigationOptions: ({ navigation }) => {
         return {
           headerTitle: "UserName",
           // headerBackTitle: null,
@@ -37,7 +37,7 @@ const RootStack = createStackNavigator(
           headerLeft: (
             <Button
               onPress={() => {
-                store.dispatch(logoutOperation(navigation));
+                store.dispatch(logoutOperation());
               }}
               title="Logout"
             />
@@ -110,7 +110,7 @@ const RootStack = createStackNavigator(
     },
     Login: {
       screen: LoginScreen,
-      navigationOptions: ({ navigation }) => {
+      navigationOptions: () => {
         return {
           headerTitle: "Login",
         };

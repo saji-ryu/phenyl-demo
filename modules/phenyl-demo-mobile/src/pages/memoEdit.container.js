@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     setNavigationParams: obj => navigation.setParams(obj),
     handleUpdateButton: memoData => {
-      dispatch(updateOperation(memoData, navigation));
+      dispatch(updateOperation(memoData));
     },
   };
 };
