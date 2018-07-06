@@ -39,8 +39,7 @@ export const logoutOperation = navigation => async (dispatch, getState) => {
         entityName: session.entityName,
       })
     );
-    // navigation.navigate("Login");
-    navigation.goBack();
+    dispatch({ type: "PAGE_BACK" });
   } catch (e) {
     console.log(e);
   }
@@ -113,7 +112,7 @@ export const updateOperation = (memoData, navigation) => async (
         },
       })
     );
-    navigation.goBack();
+    dispatch({ type: "PAGE_BACK" });
   } catch (e) {
     console.log(e);
   }

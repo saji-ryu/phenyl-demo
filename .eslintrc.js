@@ -7,6 +7,10 @@ module.exports = {
     "plugin:react-native/all",
     "plugin:import/recommended",
     "plugin:prettier/recommended",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react",
+    "prettier/standard",
   ],
 
   plugins: ["prettier", "flowtype", "react", "react-native"],

@@ -75,7 +75,7 @@ const RootStack = createStackNavigator(
           headerLeft: (
             <Button
               onPress={() => {
-                navigation.goBack();
+                store.dispatch({ type: "PAGE_BACK" });
               }}
               title="Home"
             />
@@ -100,7 +100,7 @@ const RootStack = createStackNavigator(
           headerLeft: (
             <Button
               onPress={() => {
-                navigation.goBack();
+                store.dispatch({ type: "PAGE_BACK" });
               }}
               title="Back"
             />
@@ -137,13 +137,18 @@ const mapActionToNavParams = action => {
       return ["MemoEdit", { memoId: action.memoId }];
     case "MEMO_CREATED":
       return ["MemoEdit", { memoId: action.memoId }];
+    case "PAGE_BACK":
+      return ["Back"];
   }
   return null;
 };
 
 const navigationMiddleware = store => next => action => {
   const navParams = mapActionToNavParams(action);
-  navParams && NavigationService.navigate(...navParams);
+  navParams &&
+    navParams[0] !== "Back" &&
+    NavigationService.navigate(...navParams);
+  navParams && navParams[0] === "Back" && NavigationService.goBack();
   return next(action);
 };
 
