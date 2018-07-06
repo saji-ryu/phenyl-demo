@@ -1,11 +1,13 @@
 // @flow
 export const memosSelector = state => {
-  return state.phenyl.entities.user.hoge.origin.memos;
+  const userId = sessionSelector(state).userId;
+  return state.phenyl.entities.user[userId].origin.memos;
 };
 export const viewMemoSelector = state => {
   let sortedMemos;
-  if (state.phenyl.entities.user.hoge.origin.memos) {
-    sortedMemos = state.phenyl.entities.user.hoge.origin.memos.slice();
+  const userId = sessionSelector(state).userId;
+  if (state.phenyl.entities.user[userId].origin.memos) {
+    sortedMemos = state.phenyl.entities.user[userId].origin.memos.slice();
     sortedMemos.sort((a, b) => {
       if (a.updatedAt > b.updatedAt) {
         return -1;
@@ -17,4 +19,8 @@ export const viewMemoSelector = state => {
     sortedMemos = [];
   }
   return sortedMemos;
+};
+
+export const sessionSelector = state => {
+  return state.phenyl.session;
 };

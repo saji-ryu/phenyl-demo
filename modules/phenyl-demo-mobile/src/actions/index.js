@@ -1,6 +1,6 @@
 // @flow
 import { actions } from "phenyl-redux";
-import { memosSelector } from "../selectors";
+import { memosSelector, sessionSelector } from "../selectors";
 // import navigationService from "../../NavigationService";
 
 export const loginOperation = ({ email, password }, navigation) => async (
@@ -22,6 +22,7 @@ export const loginOperation = ({ email, password }, navigation) => async (
         credentials: { email, password },
       })
     );
+    console.log("login successs");
     dispatch({ type: "LOGIN_SUCCESS" });
     // navigationService.navigate({ routeName: "Home" });
   } catch (e) {
@@ -59,12 +60,12 @@ export const createMemoOperation = () => async (dispatch, getState) => {
       createdAt: timeStamp,
       updatedAt: timeStamp,
     };
+    const userId = sessionSelector(getState()).userId;
 
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
+        id: userId,
         operation: {
           $push: {
             memos: memoData,
@@ -81,7 +82,7 @@ export const createMemoOperation = () => async (dispatch, getState) => {
 
 export const updateOperation = memoData => async (dispatch, getState) => {
   try {
-    let memos = await memosSelector(getState());
+    const memos = await memosSelector(getState());
 
     let memoIndex;
     memos.map((memo, index) => {
@@ -90,16 +91,16 @@ export const updateOperation = memoData => async (dispatch, getState) => {
       }
     });
 
-    let contentKey = "memos[" + memoIndex + "].content";
-    let titleKey = "memos[" + memoIndex + "].title";
-    let updateAtKey = "memos[" + memoIndex + "].updatedAt";
-    let updateTime = Date.now();
+    const contentKey = "memos[" + memoIndex + "].content";
+    const titleKey = "memos[" + memoIndex + "].title";
+    const updateAtKey = "memos[" + memoIndex + "].updatedAt";
+    const updateTime = Date.now();
+    const userId = sessionSelector(getState()).userId;
 
     await dispatch(
       actions.commitAndPush({
         entityName: "user",
-        // のちにユーザー名に
-        id: "hoge",
+        id: userId,
         operation: {
           $set: {
             [contentKey]: memoData.content,

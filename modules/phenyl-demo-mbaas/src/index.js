@@ -15,7 +15,7 @@ const debug = _debug("phenyl-demo-mbaas:server");
 const __DEV__ = process.env.NODE_ENV === "development";
 
 const getConnection = async (): Promise<EntityClient<EntityMap>> => {
-  //とりあえずメモリデータベース
+  // とりあえずメモリデータベース
   debug("Use memory client");
   const client = createMemoryClient();
   const time = Date.now();
@@ -36,12 +36,26 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
           },
         ],
       },
+      saji: {
+        // <- ID
+        email: "saji@example.com",
+        password: "saji",
+        memos: [
+          {
+            id: 0,
+            title: "tutorial",
+            content: "this is first page",
+            createdAt: time,
+            updatedAt: time,
+          },
+        ],
+      },
     },
   }; // TODO:後に初期データ投入で使いたくなるはず(by やまたつ)
-  //初期データ投入
+  // 初期データ投入
   await insertFixtures(client, fixtures);
   return client;
-  /**TODO:
+  /** TODO:
    * 現在はmemoryDBを使っているがこれは本来developmentの時
    * NODE_ENVがdevelopmentじゃない時の処理をあとで条件分岐で書く
    */
@@ -52,9 +66,9 @@ const main = async () => {
    * entityClientは永続化層とのやりとりの抽象
    * EntityClient<EntityMap>
    */
-  //上参照clietが帰ってくる
+  // 上参照clietが帰ってくる
   const entityClient: EntityClient<EntityMap> = await getConnection();
-  //port番号の指定およびチェック
+  // port番号の指定およびチェック
   const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8888;
   if (isNaN(port)) {
     throw new Error(
@@ -62,7 +76,7 @@ const main = async () => {
     );
   }
 
-  //PhenylrestAPIを作成するためのfunctionGroupe　今は空
+  // PhenylrestAPIを作成するためのfunctionGroupe　今は空
   const functionalGroup = {
     users: createUserDefinitions(entityClient),
   };
@@ -86,7 +100,7 @@ const main = async () => {
   // CORSを全面的に許可する
   app.use(cors()); // やる
 
-  //　上のハンドラを元に実際にミドルウェアを作る
+  // 上のハンドラを元に実際にミドルウェアを作る
   app.use(createPhenylMiddleware({ restApiHandler })); // restApiはnonUser一個、カスタムなしで作る
 
   app.listen(port, async () => {
