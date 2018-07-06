@@ -1,7 +1,7 @@
 // @flow
 import { actions } from "phenyl-redux";
 import { memosSelector } from "../selectors";
-import navigationService from "../../NavigationService";
+// import navigationService from "../../NavigationService";
 
 export const loginOperation = ({ email, password }, navigation) => async (
   dispatch,
@@ -39,13 +39,14 @@ export const logoutOperation = navigation => async (dispatch, getState) => {
         entityName: session.entityName,
       })
     );
-    navigation.navigate("Login");
+    // navigation.navigate("Login");
+    navigation.goBack();
   } catch (e) {
     console.log(e);
   }
 };
 
-export const createMemoOperation = navigation => async (dispatch, getState) => {
+export const createMemoOperation = () => async (dispatch, getState) => {
   // let phenylId = getState().phenyl.session.id;
   // console.log(phenylId);
   try {
@@ -73,7 +74,7 @@ export const createMemoOperation = navigation => async (dispatch, getState) => {
       })
     );
 
-    navigation.navigate("MemoEdit", { memoId });
+    dispatch({ type: "MEMO_CREATED", memoId: memoId });
   } catch (e) {
     console.log(e);
   }

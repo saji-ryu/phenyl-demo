@@ -14,6 +14,7 @@ import HomeScreen from "./src/pages/home.container";
 import MemoViewScreen from "./src/pages/memoView.container";
 import MemoEditScreen from "./src/pages/memoEdit.container";
 import { createMemoOperation, logoutOperation } from "./src/actions";
+import { memosSelector } from "./src/selectors";
 
 import NavigationService from "./NavigationService";
 
@@ -28,7 +29,7 @@ const RootStack = createStackNavigator(
           headerRight: (
             <Button
               onPress={() => {
-                store.dispatch(createMemoOperation(navigation));
+                store.dispatch(createMemoOperation());
               }}
               title="New"
             />
@@ -49,12 +50,22 @@ const RootStack = createStackNavigator(
       // TODO: idをparamsからとってきて、memoに突っ込む
       navigationOptions: ({ navigation }) => {
         return {
-          headerTitle: () => <Text>あああ</Text>,
+          headerTitle: () => (
+            <Text>
+              {
+                memosSelector(store.getState())[
+                  navigation.getParam("memoId", null)
+                ].title
+              }
+            </Text>
+          ),
           headerBackTitle: null,
           headerRight: (
             <Button
               onPress={() => {
-                navigation.navigate("MemoEdit", {
+                // TODO:まだnavigation依存してる
+                store.dispatch({
+                  type: "MEMO_EDIT_SELECTED",
                   memoId: navigation.getParam("memoId", null),
                 });
               }}
@@ -119,6 +130,13 @@ const mapActionToNavParams = action => {
   switch (action.type) {
     case "LOGIN_SUCCESS":
       return ["Home"];
+    case "MEMO_TITLE_SELECTED":
+      return ["MemoView", { memoId: action.memoId }];
+    // editの場合memoIdを取ってくる時にnavigtionに依存している
+    case "MEMO_EDIT_SELECTED":
+      return ["MemoEdit", { memoId: action.memoId }];
+    case "MEMO_CREATED":
+      return ["MemoEdit", { memoId: action.memoId }];
   }
   return null;
 };

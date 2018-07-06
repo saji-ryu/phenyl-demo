@@ -10,10 +10,9 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { navigation } = ownProps;
   return {
     handleTitleButton: memoId => {
-      navigation.navigate("MemoView", { memoId });
+      dispatch({ type: "MEMO_TITLE_SELECTED", memoId: memoId });
     },
   };
 };
