@@ -20,6 +20,19 @@ type Props = {
 };
 
 export default class MemoViewScreen extends React.Component<Props> {
+  render() {
+    return (
+      <View style={styles.viewStyle}>
+        <Text style={styles.connectText}>{this.props.memo.content}</Text>
+        <TouchableOpacity style={styles.deleteButton} onPress={this.showAlert}>
+          <Image
+            style={styles.deleteImage}
+            source={require("../../images/delete-icon.png")}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
   showAlert() {
     console.log(this.props);
     Alert.alert(
@@ -36,19 +49,6 @@ export default class MemoViewScreen extends React.Component<Props> {
         },
       ],
       { cancelable: true }
-    );
-  }
-  render() {
-    return (
-      <View style={styles.viewStyle}>
-        <Text style={styles.connectText}>{this.props.memo.content}</Text>
-        <TouchableOpacity style={styles.deleteButton} onPress={this.showAlert}>
-          <Image
-            style={styles.deleteImage}
-            source={require("../../images/delete-icon.png")}
-          />
-        </TouchableOpacity>
-      </View>
     );
   }
 }
