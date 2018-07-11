@@ -119,6 +119,7 @@ export const updateOperation = memoData => async (dispatch, getState) => {
 };
 
 export const deleteMemoOperation = memoId => async (dispatch, getState) => {
+  // TODO:削除するオペレーションかく
   try {
     dispatch({ type: "PAGE_BACK" });
   } catch (e) {

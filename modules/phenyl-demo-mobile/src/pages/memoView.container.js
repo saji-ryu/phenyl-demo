@@ -2,7 +2,7 @@
 import { connect } from "react-redux";
 import { memoByIdSelector } from "../selectors";
 import MemoViewScreen from "./memoView";
-import deleteMemoOperation from "../actions";
+import { deleteMemoOperation } from "../actions";
 
 const mapStateToProps = (state, ownProps) => {
   const { navigation } = ownProps;
