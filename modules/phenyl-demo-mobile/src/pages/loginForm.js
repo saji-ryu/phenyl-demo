@@ -85,7 +85,7 @@ export default withFormik({
   },
 })(LoginForm);
 
-const styles = {
+const styles = StyleSheet.create({
   loginForm: {
     flex: 3,
     alignItems: "center",
@@ -108,15 +108,8 @@ const styles = {
     flex: 1,
     justifyContent: "center",
   },
-  viewStyle: {
-    flex: 1,
-    margin: 10,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   errorInput: {
     color: "red",
   },
-  titleText: { fontSize: 40 },
   contentText: { fontSize: 30, marginBottom: 10 },
-};
+});

@@ -1,16 +1,7 @@
 // @flow
 import React from "react";
-import {
-  // StyleSheet,
-  Text,
-  View,
-  Button,
-  TextInput,
-  Dimensions,
-} from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import LoginForm from "./loginForm";
-
-const screenSize = Dimensions.get("window");
 
 type Props = {
   login: Function,
@@ -41,22 +32,10 @@ export default class LoginScreen extends React.Component<Props> {
   }
 }
 
-const styles = {
-  loginTextInput: {
-    height: 40,
-    width: screenSize.width - 60,
-    fontSize: 20,
-    borderColor: "#424242",
-    borderRadius: 5,
-    borderWidth: 1,
-  },
+const styles = StyleSheet.create({
   f1acjc: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-  },
-  f1jc: {
-    flex: 1,
     justifyContent: "center",
   },
   viewStyle: {
@@ -64,9 +43,6 @@ const styles = {
     margin: 10,
     alignItems: "center",
     justifyContent: "center",
-  },
-  errorInput: {
-    color: "red",
   },
   errorMessage: {
     color: "red",
@@ -78,5 +54,4 @@ const styles = {
     justifyContent: "center",
   },
   titleText: { fontSize: 40 },
-  contentText: { fontSize: 30, marginBottom: 10 },
-};
+});
