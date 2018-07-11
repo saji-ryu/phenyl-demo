@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import {
-  StyleSheet,
+  // StyleSheet,
   Text,
   View,
   Button,
@@ -13,6 +13,7 @@ const screenSize = Dimensions.get("window");
 
 type Props = {
   login: Function,
+  phenylError: null | Object,
 };
 
 export default class LoginScreen extends React.Component<Props> {
@@ -25,7 +26,10 @@ export default class LoginScreen extends React.Component<Props> {
         <View style={styles.f1jc}>
           <Text style={styles.contentText}>UserName</Text>
           <TextInput
-            style={styles.loginTextInput}
+            style={[
+              styles.loginTextInput,
+              !!this.props.phenylError && styles.errorInput,
+            ]}
             value="hoge@example.com" // FIXME:パーシスト入れたら消す
             autoCapitalize="none"
             onChangeText={text => {
@@ -36,7 +40,10 @@ export default class LoginScreen extends React.Component<Props> {
         <View style={styles.f1jc}>
           <Text style={styles.contentText}>PassWord</Text>
           <TextInput
-            style={styles.loginTextInput}
+            style={[
+              styles.loginTextInput,
+              !!this.props.phenylError && styles.errorInput,
+            ]}
             value="hogehoge" // FIXME:パーシスト入れたら消す
             autoCapitalize="none"
             onChangeText={text => {
@@ -60,7 +67,7 @@ export default class LoginScreen extends React.Component<Props> {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   loginTextInput: {
     height: 40,
     width: screenSize.width - 60,
@@ -84,6 +91,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  errorInput: {
+    color: "red",
+  },
   titleText: { fontSize: 40 },
   contentText: { fontSize: 30, marginBottom: 10 },
-});
+};

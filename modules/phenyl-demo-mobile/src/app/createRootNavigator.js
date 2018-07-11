@@ -101,7 +101,8 @@ const createRootNavigator = store => {
             headerLeft: (
               <Button
                 onPress={() => {
-                  store.dispatch({ type: "PAGE_BACK" });
+                  // store.dispatch({ type: "PAGE_BACK" });
+                  navigation.state.params.goBack();
                 }}
                 title="Back"
               />

@@ -18,6 +18,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     handleUpdateButton: memoData => {
       dispatch(updateOperation(memoData));
     },
+    goBack: () => {
+      dispatch({ type: "PAGE_BACK" });
+    },
   };
 };
 

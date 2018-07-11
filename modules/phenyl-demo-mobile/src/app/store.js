@@ -4,12 +4,14 @@
 import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import thunk from "redux-thunk";
 import phenylReducer, { createMiddleware } from "phenyl-redux/jsnext";
+import { feedbackReducer } from "../reducers";
 import PhenylHttpClient from "phenyl-http-client/jsnext";
 import NavigationService from "../../NavigationService";
 
 const httpClient = new PhenylHttpClient({ url: "http://localhost:8888" });
 const reducers = combineReducers({
   phenyl: phenylReducer,
+  feedback: feedbackReducer,
 });
 const mapActionToNavParams = action => {
   switch (action.type) {
