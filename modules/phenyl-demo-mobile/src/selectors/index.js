@@ -24,3 +24,11 @@ export const viewMemoSelector = state => {
 export const sessionSelector = state => {
   return state.phenyl.session;
 };
+
+export const memoByIdSelector = (state, id) => {
+  for (let memo of memosSelector(state)) {
+    if (memo.id === id) {
+      return memo;
+    }
+  }
+};

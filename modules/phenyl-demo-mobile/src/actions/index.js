@@ -51,8 +51,10 @@ export const logoutOperation = () => async (dispatch, getState) => {
 
 export const createMemoOperation = () => async (dispatch, getState) => {
   try {
-    const memoId = memosSelector(getState()).length;
+    // const memoId = memosSelector(getState()).length;
     const timeStamp = Date.now();
+    const memoId =
+      Math.floor(Math.random() * 10000).toString(16) + String(timeStamp);
     const memoData = {
       id: memoId,
       title: "new Title",

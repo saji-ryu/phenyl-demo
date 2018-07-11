@@ -1,14 +1,14 @@
 // @flow
 import { connect } from "react-redux";
 import { updateOperation } from "../actions";
-import { memosSelector } from "../selectors";
+import { memosSelector, memoByIdSelector } from "../selectors";
 import MemoEditScreen from "./memoEdit";
 
 const mapStateToProps = (state, ownProps) => {
   const { navigation } = ownProps;
   const memoId = navigation.getParam("memoId", null);
   return {
-    memo: memosSelector(state)[memoId],
+    memo: memoByIdSelector(state, memoId),
   };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

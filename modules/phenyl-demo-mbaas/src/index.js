@@ -28,7 +28,7 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
         password: "hogehoge",
         memos: [
           {
-            id: 0,
+            id: "00000000",
             title: "tutorial",
             content: "this is first page",
             createdAt: time,
@@ -42,7 +42,7 @@ const getConnection = async (): Promise<EntityClient<EntityMap>> => {
         password: "saji",
         memos: [
           {
-            id: 0,
+            id: "00000000",
             title: "tutorial",
             content: "this is first page",
             createdAt: time,

@@ -9,7 +9,7 @@ import HomeScreen from "../pages/home.container";
 import MemoViewScreen from "../pages/memoView.container";
 import MemoEditScreen from "../pages/memoEdit.container";
 import { createMemoOperation, logoutOperation } from "../actions";
-import { memosSelector, sessionSelector } from "../selectors";
+import { memosSelector, memoByIdSelector, sessionSelector } from "../selectors";
 
 const createRootNavigator = store => {
   return createStackNavigator(
@@ -51,9 +51,10 @@ const createRootNavigator = store => {
             headerTitle: () => (
               <Text style={styles.headerTitle}>
                 {
-                  memosSelector(store.getState())[
+                  memoByIdSelector(
+                    store.getState(),
                     navigation.getParam("memoId", null)
-                  ].title
+                  ).title
                 }
               </Text>
             ),
