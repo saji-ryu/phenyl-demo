@@ -1,6 +1,6 @@
 // @flow
 import { connect } from "react-redux";
-import { memosSelector, memoByIdSelector } from "../selectors";
+import { memoByIdSelector } from "../selectors";
 import MemoViewScreen from "./memoView";
 
 const mapStateToProps = (state, ownProps) => {
