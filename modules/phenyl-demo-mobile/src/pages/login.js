@@ -8,6 +8,7 @@ import {
   TextInput,
   Dimensions,
 } from "react-native";
+import LoginForm from "./loginForm";
 
 const screenSize = Dimensions.get("window");
 
@@ -17,51 +18,24 @@ type Props = {
 };
 
 export default class LoginScreen extends React.Component<Props> {
+  handleLogin = payload => {
+    this.props.login(payload);
+  };
   render() {
+    console.log(this.props.phenylError);
     return (
       <View style={styles.viewStyle}>
         <View style={styles.f1acjc}>
           <Text style={styles.titleText}>MEMO</Text>
         </View>
-        <View style={styles.f1jc}>
-          <Text style={styles.contentText}>UserName</Text>
-          <TextInput
-            style={[
-              styles.loginTextInput,
-              !!this.props.phenylError && styles.errorInput,
-            ]}
-            value="hoge@example.com" // FIXME:パーシスト入れたら消す
-            autoCapitalize="none"
-            onChangeText={text => {
-              this.userName = text;
-            }}
-          />
+        <View style={styles.errorField}>
+          {this.props.phenylError && (
+            <Text style={styles.errorMessage}>
+              メールアドレスかパスワードが間違っています
+            </Text>
+          )}
         </View>
-        <View style={styles.f1jc}>
-          <Text style={styles.contentText}>PassWord</Text>
-          <TextInput
-            style={[
-              styles.loginTextInput,
-              !!this.props.phenylError && styles.errorInput,
-            ]}
-            value="hogehoge" // FIXME:パーシスト入れたら消す
-            autoCapitalize="none"
-            onChangeText={text => {
-              this.password = text;
-            }}
-          />
-        </View>
-        <View style={styles.f1acjc}>
-          <Button
-            onPress={() => {
-              this.props.login({
-                email: this.userName,
-                password: this.password,
-              });
-            }}
-            title="Login"
-          />
-        </View>
+        <LoginForm onSubmit={this.handleLogin} />
       </View>
     );
   }
@@ -93,6 +67,15 @@ const styles = {
   },
   errorInput: {
     color: "red",
+  },
+  errorMessage: {
+    color: "red",
+    fontSize: 15,
+  },
+  errorField: {
+    flex: 0.2,
+    alignItems: "center",
+    justifyContent: "center",
   },
   titleText: { fontSize: 40 },
   contentText: { fontSize: 30, marginBottom: 10 },
