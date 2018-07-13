@@ -50,12 +50,14 @@ const createRootNavigator = store => {
           return {
             headerTitle: () => (
               <Text style={styles.headerTitle}>
-                {
+                {memoByIdSelector(
+                  store.getState(),
+                  navigation.getParam("memoId", null)
+                ) &&
                   memoByIdSelector(
                     store.getState(),
                     navigation.getParam("memoId", null)
-                  ).title
-                }
+                  ).title}
               </Text>
             ),
             headerBackTitle: null,

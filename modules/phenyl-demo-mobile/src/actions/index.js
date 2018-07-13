@@ -121,7 +121,29 @@ export const updateOperation = memoData => async (dispatch, getState) => {
 export const deleteMemoOperation = memoId => async (dispatch, getState) => {
   // TODO:削除するオペレーションかく
   try {
-    dispatch({ type: "PAGE_BACK" });
+    let memosBeforeDelete = memosSelector(getState());
+    let deleteMemoIndex = null;
+    await memosBeforeDelete.map((memo, index) => {
+      if (memo.id === memoId) {
+        deleteMemoIndex = index;
+      }
+    });
+    let memosAfterDelete = memosBeforeDelete.slice();
+    if (deleteMemoIndex) {
+      memosAfterDelete.splice(deleteMemoIndex, 1);
+    }
+    console.log(JSON.stringify(memosAfterDelete));
+    const userId = sessionSelector(getState()).userId;
+    await dispatch(
+      actions.commitAndPush({
+        entityName: "user",
+        id: userId,
+        operation: {
+          $set: { memos: memosAfterDelete },
+        },
+      })
+    );
+    await dispatch({ type: "PAGE_BACK" });
   } catch (e) {
     console.log(e);
   }

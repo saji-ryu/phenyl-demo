@@ -27,7 +27,9 @@ export default class MemoViewScreen extends React.Component<Props> {
   render() {
     return (
       <View style={styles.viewStyle}>
-        <Text style={styles.connectText}>{this.props.memo.content}</Text>
+        <Text style={styles.connectText}>
+          {this.props.memo && this.props.memo.content}
+        </Text>
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={() => {
