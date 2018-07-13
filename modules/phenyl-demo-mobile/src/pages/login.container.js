@@ -9,7 +9,6 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
-  // const { navigation } = ownProps;
   return {
     login: mobileUser => {
       dispatch(loginOperation(mobileUser));

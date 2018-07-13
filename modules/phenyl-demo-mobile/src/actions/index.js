@@ -2,7 +2,7 @@
 import { actions } from "phenyl-redux";
 import { memosSelector, sessionSelector } from "../selectors";
 
-export const loginOperation = ({ email, password }, setState) => async (
+export const loginOperation = ({ email, password }) => async (
   dispatch,
   getState
 ) => {
@@ -24,11 +24,9 @@ export const loginOperation = ({ email, password }, setState) => async (
     const phenylError = await getState().phenyl.error;
     if (phenylError) {
       console.log("no match user");
-      await dispatch(loginErrorFeedback(phenylError.type));
     } else {
       dispatch({ type: "LOGIN_SUCCESS" });
     }
-    // console.log("login successs");
   } catch (e) {
     console.log(e);
   }

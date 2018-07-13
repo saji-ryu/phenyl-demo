@@ -68,19 +68,3 @@ function page(state = initPageState, action) {
 //   page,
 // });
 export { memos, page };
-
-const initFeedbackState = {
-  errorFeedback: {
-    fontColor: "black",
-    message: null,
-  },
-};
-
-export function feedbackReducer(state = initFeedbackState, action) {
-  switch (action.type) {
-    case "LOGIN_ERROR":
-      return Object.assign({}, state, action.payload);
-    default:
-      return state;
-  }
-}

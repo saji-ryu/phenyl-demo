@@ -8,29 +8,27 @@ type Props = {
   phenylError: null | Object,
 };
 
-export default class LoginScreen extends React.Component<Props> {
-  handleLogin = payload => {
-    this.props.login(payload);
-  };
-  render() {
-    console.log(this.props.phenylError);
-    return (
-      <View style={styles.viewStyle}>
-        <View style={styles.f1acjc}>
-          <Text style={styles.titleText}>MEMO</Text>
-        </View>
-        <View style={styles.errorField}>
-          {this.props.phenylError && (
-            <Text style={styles.errorMessage}>
-              メールアドレスかパスワードが間違っています
-            </Text>
-          )}
-        </View>
-        <LoginForm onSubmit={this.handleLogin} />
-      </View>
-    );
-  }
-}
+const LoginScreen = (props: Props) => (
+  <View style={styles.viewStyle}>
+    <View style={styles.f1acjc}>
+      <Text style={styles.titleText}>MEMO</Text>
+    </View>
+    <View style={styles.errorField}>
+      {props.phenylError &&
+        props.phenylError.type === "Unauthorized" && (
+          <Text style={styles.errorMessage}>
+            メールアドレスかパスワードが間違っています
+          </Text>
+        )}
+      {props.phenylError &&
+        props.phenylError.type === "NetworkFailed" && (
+          <Text style={styles.errorMessage}>接続に失敗しました。</Text>
+        )}
+    </View>
+    <LoginForm onSubmit={props.login} />
+  </View>
+);
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   f1acjc: {
