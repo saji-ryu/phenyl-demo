@@ -121,7 +121,7 @@ export const updateOperation = memoData => async (dispatch, getState) => {
 export const deleteMemoOperation = memoId => async (dispatch, getState) => {
   // TODO:削除するオペレーションかく
   try {
-    let memosBeforeDelete = memosSelector(getState());
+    const memosBeforeDelete = memosSelector(getState());
     let deleteMemoIndex = null;
     await memosBeforeDelete.map((memo, index) => {
       if (memo.id === memoId) {
@@ -132,7 +132,6 @@ export const deleteMemoOperation = memoId => async (dispatch, getState) => {
     if (deleteMemoIndex) {
       memosAfterDelete.splice(deleteMemoIndex, 1);
     }
-    console.log(JSON.stringify(memosAfterDelete));
     const userId = sessionSelector(getState()).userId;
     await dispatch(
       actions.commitAndPush({
