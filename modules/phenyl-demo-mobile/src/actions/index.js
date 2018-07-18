@@ -27,7 +27,6 @@ export const loginOperation = ({ email, password }) => async (
     } else {
       dispatch({ type: "LOGIN_SUCCESS" });
     }
-    // console.log("login successs");
   } catch (e) {
     console.log(e);
   }

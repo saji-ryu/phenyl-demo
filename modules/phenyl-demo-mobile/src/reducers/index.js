@@ -1,13 +1,13 @@
-//@flow
-import { combineReducers } from "redux";
-import {
-  CREATE_MEMO,
-  UPDATE_MEMO,
-  DELETE_MEMO,
-  PAGE_TO,
-} from "../actions/index";
-import type { MemoData } from "../types";
-import type { ReduxAction } from "../types";
+// @flow
+// import { combineReducers } from "redux";
+// import {
+//   CREATE_MEMO,
+//   UPDATE_MEMO,
+//   DELETE_MEMO,
+//   PAGE_TO,
+// } from "../actions/index";
+// import type { MemoData } from "../types";
+// import type { ReduxAction } from "../types";
 
 // function userSignIn(state: Object = {}, action: ReduxAction) {
 //   switch (action.type) {
@@ -63,7 +63,6 @@ function page(state = initPageState, action) {
       return state;
   }
 }
-
 // const memoApp = combineReducers({
 //   memos,
 //   page,

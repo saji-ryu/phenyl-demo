@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { StyleSheet, View, TextInput, Dimensions } from "react-native";
+import { StyleSheet, View, TextInput, Dimensions, Alert } from "react-native";
 import type { Memo } from "../types";
 
 const screenSize = Dimensions.get("window");
@@ -9,6 +9,7 @@ type Props = {
   memo: Memo,
   setNavigationParams: Function,
   handleUpdateButton: Function,
+  goBack: Function,
 };
 
 export default class MemoEditScreen extends React.Component<Props> {
@@ -23,7 +24,28 @@ export default class MemoEditScreen extends React.Component<Props> {
           content: this.inputContent,
         });
       },
+      goBack: () => {
+        this.showAlert();
+      },
     });
+  }
+  showAlert() {
+    Alert.alert(
+      "アラート",
+      "メモを保存しないまま戻ろうとしています。 よろしいですか？",
+      [
+        {
+          text: "OK",
+          onPress: () => this.props.goBack(),
+          style: "default",
+        },
+        {
+          text: "Cancel",
+          style: "default",
+        },
+      ],
+      { cancelable: true }
+    );
   }
   render() {
     return (

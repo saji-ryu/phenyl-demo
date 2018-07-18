@@ -18,13 +18,11 @@ const createRootNavigator = store => {
         screen: HomeScreen,
         navigationOptions: () => {
           return {
-            // headerTitle: "UserName",
             headerTitle: () => (
               <Text style={styles.headerTitle}>
                 {sessionSelector(store.getState()).userId}のメモ
               </Text>
             ),
-            // headerBackTitle: null,
             headerRight: (
               <Button
                 onPress={() => {
@@ -101,7 +99,7 @@ const createRootNavigator = store => {
             headerLeft: (
               <Button
                 onPress={() => {
-                  store.dispatch({ type: "PAGE_BACK" });
+                  navigation.state.params.goBack();
                 }}
                 title="Back"
               />
